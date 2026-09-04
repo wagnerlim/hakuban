@@ -1,0 +1,188 @@
+{
+  "home.heroLead": {
+    "message": "Um kanban no terminal onde seus agentes também trabalham — e onde você declara o que acontece quando um card muda de coluna."
+  },
+  "theme.colorToggle.ariaLabel.mode.system": {
+    "message": "sistema",
+    "description": "The name for the system color mode"
+  },
+  "theme.colorToggle.ariaLabel.mode.light": {
+    "message": "claro",
+    "description": "The name for the light color mode"
+  },
+  "theme.colorToggle.ariaLabel.mode.dark": {
+    "message": "escuro",
+    "description": "The name for the dark color mode"
+  },
+  "home.eyebrow": {
+    "message": "hakuban, “quadro branco”"
+  },
+  "home.heroSub": {
+    "message": "Cada card e cada quadro é um arquivo Markdown no disco, então uma IA lê e edita tudo do mesmo jeito que você: é só texto. Colunas são estados, e cada estado é seu para definir — rodar um script, mandar um e-mail, marcar um release, passar a tarefa adiante. O Hakuban entrega o quadro; o fluxo é uma página em branco."
+  },
+  "home.cta": {
+    "message": "Ver o formato do quadro →"
+  },
+  "home.expectation": {
+    "message": "Projeto solo · sem suporte · PRs podem esperar · MIT"
+  },
+  "home.assetTag": {
+    "message": "solte o asset aqui"
+  },
+  "home.assetTitle": {
+    "message": "asciinema — um card cruzando uma coluna"
+  },
+  "home.assetNote": {
+    "message": "A TUI ao vivo enquanto um agente move cards, e um arrasto à mão fazendo o mesmo. O ponto é a transição, não o payload."
+  },
+  "home.boardKicker": {
+    "message": "O quadro"
+  },
+  "home.boardTitle": {
+    "message": "Uma máquina de estados que mora no disco."
+  },
+  "home.boardLead": {
+    "message": "O quadro é um .md com frontmatter YAML (as colunas e o que cada uma faz) e cada card é outro .md — frontmatter mais o corpo markdown, onde vivem as notes. O disco é a fonte da verdade e tem dois escritores legítimos — a TUI e quem editar o arquivo na mão: você, ou um agente. Escrita sempre atômica; a TUI relê o disco ~1×/s, então um card que o agente move aparece na sua frente."
+  },
+  "home.yamlGuide": {
+    "message": "Um card por vez aqui."
+  },
+  "home.yamlInstruction": {
+    "message": "O que deve acontecer, nas suas palavras."
+  },
+  "home.fieldColumns": {
+    "message": "Os estados da esteira, em ordem."
+  },
+  "home.fieldOnEnter": {
+    "message": "Instrução — prosa rodada por um agente headless."
+  },
+  "home.fieldCmd": {
+    "message": "Script — shell, card em JSON no stdin."
+  },
+  "home.fieldTools": {
+    "message": "As únicas ferramentas que uma instrução deste quadro pode usar."
+  },
+  "home.fieldGuide": {
+    "message": "Nota da coluna. Lida, nunca executada."
+  },
+  "home.contractTag": {
+    "message": "o contrato"
+  },
+  "home.contractBody": {
+    "message": "Hook que falha aborta o movimento. O card fica onde estava e o motivo aparece — igual se um humano arrastou ou se um agente chamou hakuban move."
+  },
+  "home.cardAgentsTitle": {
+    "message": "agentes, por padrão"
+  },
+  "home.cardAgentsBody": {
+    "message": "Os subcomandos headless move e progress deixam um agente conduzir a esteira sem terminal aberto."
+  },
+  "home.cardHandsTitle": {
+    "message": "mãos, quando você quiser"
+  },
+  "home.cardHandsBody": {
+    "message": "Arraste um card e os mesmos hooks disparam. Arrastável mostra grab, arrastando mostra grabbing; 1 clique seleciona, 2 ativam."
+  },
+  "home.cardHttpTitle": {
+    "message": "o binário não fala HTTP"
+  },
+  "home.cardHttpBody": {
+    "message": "O Hakuban nunca acessa a rede. Um hook acessa. Integração é composição — princípio, não limitação."
+  },
+  "home.exKicker": {
+    "message": "O que declarar"
+  },
+  "home.exTitle": {
+    "message": "Quatro quadros. Nenhum vem com a ferramenta."
+  },
+  "home.exLead": {
+    "message": "Exemplos, não features. O quadro do autor entrega tarefas a um agente que abre PRs — um fluxo entre N, e o seu não tem motivo para se parecer com ele."
+  },
+  "home.ex1Title": {
+    "message": "Avisar o cliente"
+  },
+  "home.ex1Body": {
+    "message": "“Escreva um update curto a partir das notes do card e envie para o endereço do frontmatter.”"
+  },
+  "home.ex2Title": {
+    "message": "Quebrar o card"
+  },
+  "home.ex2Body": {
+    "message": "“Se as notes descrevem mais de uma entrega, crie um card por entrega e deixe este como pai.”"
+  },
+  "home.ex3Title": {
+    "message": "Rodar o checklist"
+  },
+  "home.ex3Body": {
+    "message": "Um script shell: testes, linter, piso de cobertura. Saída não-zero e o card não sai de Doing."
+  },
+  "home.ex4Title": {
+    "message": "Passar para um agente"
+  },
+  "home.ex4Body": {
+    "message": "O quadro do autor fez card → implementação → PR aprovado em 9min18s em 29/08/2026. Real, e ainda assim só um exemplo."
+  },
+  "home.honestTag": {
+    "message": "honesto"
+  },
+  "home.honestBody": {
+    "message": "Numa máquina limpa a demo de agente não roda: precisa de jq, gh autenticado, uma assinatura paga do Claude Code e o multiplexer herdr. O pitch é “veja como se faz”, não “instale e use”."
+  },
+  "home.distKicker": {
+    "message": "A distinção"
+  },
+  "home.distTitle": {
+    "message": "Instrução não é script."
+  },
+  "home.distLead": {
+    "message": "Os dois campos disparam na mesma transição, então parecem intercambiáveis. Não são. Para compartilhar um quadro, o que importa não é o que o arquivo diz — é o que ele pode fazer."
+  },
+  "home.colScript": {
+    "message": "shell determinístico"
+  },
+  "home.colInstruction": {
+    "message": "prosa, agente headless"
+  },
+  "home.rowBehavior": {
+    "message": "comportamento"
+  },
+  "home.behaviorScript": {
+    "message": "Determinístico — você lê exatamente o que faz."
+  },
+  "home.behaviorInstruction": {
+    "message": "Não-determinístico — você não sabe o que vai fazer."
+  },
+  "home.rowCapability": {
+    "message": "capacidade"
+  },
+  "home.capScript": {
+    "message": "Ilimitada — não existe modelo de permissão em bash."
+  },
+  "home.capInstruction": {
+    "message": "Limitada — cabe numa linha: agent_tools."
+  },
+  "home.rowReview": {
+    "message": "revisão escala?"
+  },
+  "home.reviewScript": {
+    "message": "Não — ninguém revisa 93 invocações de jq."
+  },
+  "home.reviewInstruction": {
+    "message": "Sim — um teto de capacidade é uma lista curta."
+  },
+  "home.rowPortability": {
+    "message": "portabilidade"
+  },
+  "home.portScript": {
+    "message": "Amarra a um filesystem, um binário, um $HOME."
+  },
+  "home.portInstruction": {
+    "message": "Não amarra a nada: descreve intenção."
+  },
+  "home.doctrineTag": {
+    "message": "Doutrina do projeto:"
+  },
+  "home.doctrineBody": {
+    "message": "a instrução é o formato; _cmd é dívida — um escape hatch para controle exato, ao custo de um quadro que mais ninguém consegue rodar."
+  }
+}

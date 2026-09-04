@@ -1,0 +1,584 @@
+/* Homepage. Tokens come from src/css/custom.css; no color is literal here except the
+   three terminal lights. No shadows anywhere.
+
+   `width: 100%` on the content blocks is load-bearing: .main-wrapper is a flex column and
+   `margin: 0 auto` cancels the cross-axis stretch, so they would shrink to content. */
+
+.section {
+  width: 100%;
+  grid-template-columns: minmax(0, 1fr);
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 88px 40px;
+  display: grid;
+  gap: 44px;
+}
+
+/* ---- Hero ---- */
+.hero {
+  width: 100%;
+  grid-template-columns: minmax(0, 1fr);
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 100px 40px 32px;
+  display: grid;
+  gap: 44px;
+}
+.heroStack {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 28px;
+  justify-items: start;
+  max-width: 800px;
+}
+.eyebrow {
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.logoRow {
+  display: flex;
+  align-items: baseline;
+  gap: 22px;
+  flex-wrap: wrap;
+}
+.logoKanji {
+  font-family: 'Noto Serif JP', serif;
+  font-size: 104px;
+  line-height: 0.9;
+  letter-spacing: -4px;
+  color: var(--fg);
+}
+.logoKanji :global(.lockup-outline) {
+  color: var(--bg);
+  -webkit-text-stroke: 2px var(--fg);
+}
+.h1 {
+  margin: 0;
+  font-size: 64px;
+  line-height: 0.95;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+.lead {
+  margin: 0;
+  font-size: 28px;
+  line-height: 1.3;
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  text-wrap: pretty;
+}
+.sub {
+  margin: 0;
+  font-size: 17px;
+  line-height: 1.65;
+  color: var(--muted);
+  max-width: 640px;
+  text-wrap: pretty;
+}
+.ctaRow {
+  display: flex;
+  /* The install command is one unbreakable token; without this the row widens the page
+     instead of letting the chip scroll on its own. */
+  max-width: 100%;
+  min-width: 0;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+.cta {
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--bg);
+  background: var(--accent);
+  border-radius: 5px;
+  padding: 13px 22px;
+}
+.cta:hover {
+  color: var(--bg);
+  opacity: 0.85;
+  text-decoration: none;
+}
+.installChip {
+  display: flex;
+  min-width: 0;
+  max-width: 100%;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 14px;
+  color: var(--fg);
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  padding: 12px 16px;
+  overflow-x: auto;
+}
+.prompt {
+  color: var(--dim);
+}
+.expectation {
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 12.5px;
+  color: var(--dim);
+}
+
+/* ---- Asset figure (terminal chrome + recording slot) ---- */
+.figure {
+  margin: 0;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--panel);
+  overflow: hidden;
+}
+.titlebar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 16px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+}
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+.titlebarLabel {
+  margin-left: 8px;
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 12px;
+  color: var(--muted);
+}
+.figureBody {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  display: grid;
+  place-items: center;
+  background-image: repeating-linear-gradient(
+    135deg,
+    transparent 0 10px,
+    color-mix(in oklab, var(--muted) 12%, transparent) 10px 11px
+  );
+}
+.figureBodyFilled {
+  aspect-ratio: 16 / 9;
+  display: grid;
+  place-items: center;
+  /* The recording is 1.84:1, so contain leaves a hairline band; it reads as the terminal's
+     own padding because it carries the panel colour. */
+  background: #191622;
+}
+.asset {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+.placeholder {
+  display: grid;
+  gap: 12px;
+  justify-items: center;
+  text-align: center;
+  padding: 26px;
+  background: color-mix(in oklab, var(--panel) 90%, transparent);
+  border-radius: 8px;
+}
+.placeholderTag {
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--fg);
+}
+.placeholderTitle {
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 15px;
+  color: var(--fg);
+}
+.placeholderNote {
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 12.5px;
+  color: var(--dim);
+  max-width: 460px;
+  line-height: 1.55;
+}
+
+/* ---- Section heads ---- */
+.sectionHead {
+  display: grid;
+  gap: 14px;
+  max-width: 700px;
+}
+.kicker {
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.h2 {
+  margin: 0;
+  font-size: 38px;
+  line-height: 1.1;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+}
+.sectionLead {
+  margin: 0;
+  font-size: 17px;
+  line-height: 1.65;
+  color: var(--muted);
+  text-wrap: pretty;
+}
+
+/* ---- The board ---- */
+.boardGrid {
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: 24px;
+  align-items: start;
+}
+.yaml {
+  margin: 0;
+  overflow: auto;
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 13.5px;
+  line-height: 1.75;
+  color: var(--fg);
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 24px;
+}
+.yDim {
+  color: var(--dim);
+}
+.yMuted {
+  color: var(--muted);
+}
+.yKey {
+  color: var(--fg);
+}
+.fieldBox {
+  display: grid;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--panel);
+}
+.fieldRow {
+  display: grid;
+  grid-template-columns: 150px 1fr;
+  gap: 14px;
+  padding: 15px 20px;
+  border-bottom: 1px solid var(--border);
+}
+.fieldName {
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 13px;
+  color: var(--fg);
+  background: none;
+  border: 0;
+  padding: 0;
+}
+.fieldDesc {
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--muted);
+}
+.contract {
+  display: grid;
+  gap: 8px;
+  padding: 18px 20px;
+  background: var(--surface);
+}
+.contractTag {
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 11.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--fg);
+}
+.contractBody {
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--fg);
+}
+
+.cards3 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 18px;
+}
+.card {
+  display: grid;
+  gap: 10px;
+  padding: 22px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--panel);
+}
+.cardTitleMono {
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 12px;
+  color: var(--fg);
+}
+.cardBody {
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: var(--muted);
+}
+
+/* ---- What to declare (full-bleed band) ---- */
+.band {
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  background: var(--panel);
+}
+.bandInner {
+  width: 100%;
+  grid-template-columns: minmax(0, 1fr);
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 88px 40px;
+  display: grid;
+  gap: 40px;
+}
+.cards4 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 18px;
+}
+.exCard,
+.exCardEmphasis {
+  display: grid;
+  gap: 10px;
+  padding: 22px;
+  border-radius: 8px;
+}
+.exCard {
+  border: 1px solid var(--border);
+  background: var(--bg);
+}
+.exCardEmphasis {
+  border: 1px solid var(--fg);
+  background: var(--surface);
+}
+.exLabel,
+.exLabelEmphasis {
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 12px;
+}
+.exLabel {
+  color: var(--dim);
+}
+.exLabelEmphasis {
+  color: var(--fg);
+}
+.exTitle {
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+.exBody {
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--muted);
+}
+.honest {
+  display: flex;
+  gap: 14px;
+  align-items: baseline;
+  padding: 20px 24px;
+  border: 1px dashed var(--border);
+  border-radius: 8px;
+  background: var(--bg);
+}
+.honestTag {
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--dim);
+  flex-shrink: 0;
+}
+.honestBody {
+  font-size: 14.5px;
+  line-height: 1.65;
+  color: var(--muted);
+  text-wrap: pretty;
+}
+
+/* ---- Instruction vs script: the inverted table ---- */
+.table {
+  display: grid;
+  grid-template-columns: 170px 1fr 1fr;
+  border: 1px solid var(--shell-border);
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--shell);
+  color: var(--shell-fg);
+}
+/* Rows are wrappers only so the mobile layout can stack them; on desktop their cells
+   participate directly in the parent grid. */
+.tr {
+  display: contents;
+}
+.thCorner,
+.thScript,
+.thInstruction {
+  padding: 18px 20px;
+  border-bottom: 1px solid var(--shell-border);
+}
+.thCorner {
+  background: color-mix(in oklab, var(--shell-fg) 8%, var(--shell));
+}
+.thScript,
+.thInstruction {
+  border-left: 1px solid var(--shell-border);
+  display: grid;
+  gap: 4px;
+}
+.thScript {
+  background: color-mix(in oklab, var(--shell-fg) 8%, var(--shell));
+}
+.thInstruction {
+  background: color-mix(in oklab, var(--shell-fg) 18%, var(--shell));
+}
+.thName {
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 14.5px;
+  font-weight: 600;
+  color: var(--shell-fg);
+}
+.thSub {
+  font-size: 12.5px;
+  color: var(--shell-muted);
+}
+.tdLabel,
+.tdLabelLast {
+  padding: 16px 20px;
+  font-size: 13px;
+  color: var(--shell-muted);
+}
+.tdLabel {
+  border-bottom: 1px solid var(--shell-border);
+}
+.td,
+.tdLast {
+  padding: 16px 20px;
+  border-left: 1px solid var(--shell-border);
+  font-size: 14px;
+  line-height: 1.5;
+}
+.td {
+  border-bottom: 1px solid var(--shell-border);
+}
+.td::before,
+.tdLast::before {
+  display: none;
+}
+
+.doctrine {
+  margin: 0;
+  max-width: 780px;
+  font-size: 16.5px;
+  line-height: 1.65;
+  color: var(--muted);
+  text-wrap: pretty;
+}
+.doctrineTag {
+  color: var(--fg);
+  font-weight: 600;
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 900px) {
+  .boardGrid {
+    grid-template-columns: 1fr;
+  }
+  .fieldRow {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+}
+
+@media (max-width: 720px) {
+  .hero {
+    padding: 56px 20px 24px;
+  }
+  .section,
+  .bandInner {
+    padding: 56px 20px;
+    gap: 32px;
+  }
+  .logoKanji {
+    font-size: 64px;
+    letter-spacing: -2px;
+  }
+  .logoKanji :global(.lockup-outline) {
+    -webkit-text-stroke-width: 1.5px;
+  }
+  .h1 {
+    font-size: 40px;
+  }
+  .lead {
+    font-size: 22px;
+  }
+  .h2 {
+    font-size: 28px;
+  }
+  .installChip {
+    font-size: 12.5px;
+  }
+  .honest {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  /* The table becomes one card per row: the column name moves into each cell. */
+  .table {
+    grid-template-columns: 1fr;
+    border-radius: 10px;
+  }
+  .thCorner,
+  .thScript,
+  .thInstruction {
+    display: none;
+  }
+  .tr {
+    display: grid;
+    border-bottom: 1px solid var(--shell-border);
+  }
+  .tdLabel,
+  .tdLabelLast {
+    border-bottom: 1px solid var(--shell-border);
+    background: color-mix(in oklab, var(--shell-fg) 8%, var(--shell));
+    font-family: var(--ifm-font-family-monospace);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 11.5px;
+  }
+  .td,
+  .tdLast {
+    border-left: 0;
+    border-bottom: 0;
+  }
+  .td::before,
+  .tdLast::before {
+    display: block;
+    content: attr(data-col);
+    font-family: var(--ifm-font-family-monospace);
+    font-size: 12px;
+    color: var(--shell-muted);
+    margin-bottom: 4px;
+  }
+  .tdLast:last-child,
+  .tr:last-child {
+    border-bottom: 0;
+  }
+}

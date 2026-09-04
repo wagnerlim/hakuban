@@ -1,0 +1,366 @@
+/**
+ * Hakuban docs theme.
+ *
+ * Two palettes, mirror images of each other — the 白 / 板 inversion applied to the
+ * whole page. Monochrome only; the sole fixed hues are the three terminal lights.
+ * The --shell-* group is always the OPPOSITE value of the page body: navbar, footer
+ * and the comparison table are white-on-dark-page and black-on-light-page.
+ */
+
+/* light */
+:root {
+  --bg: #f4f4f2;
+  --panel: #fbfbfa;
+  --surface: #e9e9e6;
+  --border: #d2d2ce;
+  --fg: #111114;
+  --muted: #55555c;
+  --dim: #6f6f77; /* handoff a11y note: #82828a was ~3.3:1 on --panel */
+  --accent: #111114;
+  --shell: #0b0b0d;
+  --shell-fg: #f4f4f2;
+  --shell-border: #26262b;
+  --shell-muted: #9b9ba2;
+}
+
+/* dark (default) */
+[data-theme='dark'] {
+  --bg: #101013;
+  --panel: #17171b;
+  --surface: #202026;
+  --border: #2c2c33;
+  --fg: #f4f4f2;
+  --muted: #a2a2aa;
+  --dim: #74747c;
+  --accent: #f4f4f2;
+  --shell: #f4f4f2;
+  --shell-fg: #0b0b0d;
+  --shell-border: #d2d2ce;
+  --shell-muted: #6a6a72;
+}
+
+/* ---- Infima, driven by the tokens above ---- */
+:root,
+[data-theme='dark'] {
+  --ifm-font-family-base: 'IBM Plex Sans', 'Noto Sans SC', system-ui, sans-serif;
+  --ifm-font-family-monospace: 'IBM Plex Mono', monospace;
+  --ifm-font-size-base: 17px;
+  --ifm-line-height-base: 1.65;
+  --ifm-container-width-xl: 1120px;
+  --ifm-spacing-horizontal: 40px;
+
+  --ifm-background-color: var(--bg);
+  --ifm-background-surface-color: var(--panel);
+  --ifm-font-color-base: var(--fg);
+  --ifm-heading-color: var(--fg);
+  --ifm-color-content-secondary: var(--muted);
+
+  --ifm-color-primary: var(--fg);
+  --ifm-link-color: var(--fg);
+  --ifm-link-hover-color: var(--muted);
+  --ifm-link-decoration: none;
+
+  --ifm-code-font-size: 92%;
+  --ifm-code-background: var(--panel);
+  --ifm-code-border-radius: 5px;
+  --ifm-pre-background: var(--panel);
+  --ifm-hr-border-color: var(--border);
+  --ifm-toc-border-color: var(--border);
+  --ifm-table-border-color: var(--border);
+  --ifm-table-stripe-background: var(--panel);
+  --ifm-blockquote-color: var(--muted);
+  --ifm-blockquote-border-color: var(--border);
+  --docusaurus-highlighted-code-line-bg: var(--surface);
+
+  --ifm-navbar-height: 57px;
+  --ifm-navbar-padding-horizontal: 40px;
+  --ifm-navbar-padding-vertical: 14px;
+  --ifm-navbar-background-color: var(--shell);
+  --ifm-navbar-link-color: var(--shell-muted);
+  --ifm-navbar-link-hover-color: var(--shell-fg);
+  --ifm-navbar-shadow: none;
+
+  --ifm-footer-background-color: var(--shell);
+  --ifm-footer-color: var(--shell-muted);
+  --ifm-footer-title-color: var(--shell-fg);
+  --ifm-footer-link-color: var(--shell-muted);
+  --ifm-footer-link-hover-color: var(--shell-fg);
+  --ifm-footer-padding-horizontal: 40px;
+  --ifm-footer-padding-vertical: 56px;
+}
+
+html {
+  background: var(--bg);
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  transition: background 200ms ease, color 200ms ease;
+}
+
+/* No shadows anywhere in this design. */
+.navbar,
+.footer,
+.card,
+.dropdown__menu {
+  box-shadow: none;
+}
+
+/* ---- Navbar: the inverted band ---- */
+.navbar {
+  border-bottom: 1px solid var(--shell-border);
+}
+.navbar__inner {
+  max-width: var(--ifm-container-width-xl);
+  margin: 0 auto;
+}
+.navbar__items--right > .navbar__item,
+.navbar__items--right > .navbar__link {
+  font-size: 14px;
+}
+.navbar__items--right {
+  gap: 24px;
+}
+.navbar__link:hover {
+  text-decoration: none;
+}
+/* Every nav link is muted until hover. The in-page anchors point at the current page, so
+   Docusaurus marks them active and would keep three of the four permanently lit. */
+.navbar__items--right .navbar__link--active {
+  color: var(--ifm-navbar-link-color);
+}
+.navbar__items--right .navbar__link--active:hover {
+  color: var(--ifm-navbar-link-hover-color);
+}
+
+.navbar-lockup {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--shell-fg);
+}
+.navbar-lockup:hover {
+  color: var(--shell-fg);
+  text-decoration: none;
+}
+.navbar-wordmark {
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+/* The kanji lockup: 白 solid, 板 outline-only.
+   The outline's fill has to match the surface behind it and its stroke has to be an
+   explicit color — `currentColor` in the stroke resolves against the element's own
+   (transparent) fill, which paints nothing. */
+.lockup {
+  font-family: 'Noto Serif JP', serif;
+  line-height: 1;
+  letter-spacing: -1px;
+}
+.lockup-outline {
+  -webkit-text-stroke-width: 1px;
+}
+.navbar-lockup .lockup-outline,
+.footer-brand .lockup-outline {
+  color: var(--shell);
+  -webkit-text-stroke-color: var(--shell-fg);
+}
+
+/* Locale dropdown + color-mode toggle, styled as the design's chrome buttons.
+   Class names carry a CSS-module hash, so match on the stable prefix. */
+.navbar .dropdown > .navbar__link,
+.navbar [class*='toggleButton'] {
+  font-size: 13px;
+  color: var(--shell-fg);
+  border: 1px solid var(--shell-border);
+  border-radius: 6px;
+  padding: 7px 10px;
+}
+.navbar .dropdown > .navbar__link:hover,
+.navbar [class*='toggleButton']:hover {
+  border-color: var(--shell-fg);
+  background: transparent;
+  color: var(--shell-fg);
+}
+.navbar [class*='toggleButton'] {
+  border-radius: 4px;
+  padding: 6px 10px;
+  /* Docusaurus locks the toggle and its wrapper to a 34px square; the design's button is
+     as wide as its label. */
+  width: auto;
+  height: auto;
+  background: color-mix(in oklab, var(--shell-fg) 10%, var(--shell));
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+/* The design's toggle is the theme name plus a 13px 白 — no icon. The label comes from
+   the button's own title, which Docusaurus translates (theme.colorToggle.ariaLabel.mode.*). */
+.navbar [class*='toggleButton'] svg {
+  display: none;
+}
+.navbar [class*='toggleButton']::before {
+  content: attr(title);
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 12px;
+  line-height: 1;
+}
+.navbar [class*='toggleButton']::after {
+  content: '白';
+  font-family: 'Noto Serif JP', serif;
+  font-size: 13px;
+  line-height: 1;
+}
+.navbar [class*='colorModeToggle'] {
+  width: auto;
+  height: auto;
+}
+.navbar .dropdown__menu {
+  background: var(--shell);
+  border: 1px solid var(--shell-border);
+}
+.navbar .dropdown__link {
+  color: var(--shell-muted);
+}
+.navbar .dropdown__link:hover,
+.navbar .dropdown__link--active {
+  background: color-mix(in oklab, var(--shell-fg) 10%, var(--shell));
+  color: var(--shell-fg);
+}
+.navbar-sidebar {
+  background: var(--shell);
+  color: var(--shell-fg);
+}
+.navbar-sidebar__brand {
+  box-shadow: none;
+  border-bottom: 1px solid var(--shell-border);
+}
+.navbar__toggle {
+  color: var(--shell-fg);
+}
+
+/* ---- Footer: lockup + legal left, link columns right ---- */
+.footer {
+  background: var(--shell);
+  color: var(--shell-fg);
+  border-top: 1px solid var(--shell-border);
+}
+.footer .container {
+  max-width: var(--ifm-container-width-xl);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 36px;
+}
+.footer__bottom {
+  order: -1;
+  text-align: left;
+  max-width: 420px;
+  margin: 0;
+}
+.footer__links {
+  display: flex;
+  gap: 56px;
+  flex-wrap: wrap;
+  margin: 0;
+}
+.footer__col {
+  padding: 0;
+  display: grid;
+  gap: 9px;
+  align-content: start;
+}
+.footer__title {
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 11.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--shell-fg);
+  margin: 0;
+  white-space: nowrap;
+}
+.footer__items {
+  display: grid;
+  gap: 9px;
+}
+.footer__item {
+  font-size: 13.5px;
+  margin: 0;
+}
+.footer-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.footer-wordmark {
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.footer-legal {
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--shell-muted);
+}
+
+/* ---- Docs pages ---- */
+.theme-doc-markdown h1 {
+  font-size: 38px;
+  line-height: 1.1;
+  letter-spacing: -0.025em;
+}
+.theme-doc-sidebar-container {
+  border-right: 1px solid var(--border) !important;
+}
+/* Sidebar and TOC hover/active: a filled box in the OPPOSITE surface — white on the dark
+   theme, black on the light one. Same --shell inversion as the header, footer and the
+   comparison table. */
+.menu__link:hover,
+.menu__link--active,
+.table-of-contents__link:hover,
+.table-of-contents__link--active {
+  background: var(--shell);
+  color: var(--shell-fg);
+  border-radius: 4px;
+}
+.menu__link--active:not(.menu__link--sublist) {
+  color: var(--shell-fg);
+}
+/* TOC links carry no padding of their own, so the fill would read as a stripe. */
+.table-of-contents__link {
+  display: block;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+.table-of-contents__link:hover code,
+.table-of-contents__link--active code,
+.menu__link:hover code,
+.menu__link--active code {
+  color: inherit;
+  background: transparent;
+}
+.menu__caret:hover,
+.menu__list-item-collapsible:hover {
+  background: transparent;
+}
+.theme-doc-markdown pre {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+.theme-doc-markdown table {
+  display: table;
+  width: 100%;
+}
+.theme-doc-markdown th {
+  background: var(--surface);
+}
+.pagination-nav__link {
+  border-color: var(--border);
+}
+[id] {
+  scroll-margin-top: calc(var(--ifm-navbar-height) + 8px);
+}

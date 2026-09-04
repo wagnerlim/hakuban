@@ -1,0 +1,7 @@
+# The recording is the English UI, matching the site's root locale. The theme is `omni`,
+# the project's de-facto identity.
+theme: omni
+lang: en-US
+date_format: 2006-01-02
+confirm_delete: true
+priorities: [low, normal, high]

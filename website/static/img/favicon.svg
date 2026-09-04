@@ -1,0 +1,7 @@
+<!-- 白板 lockup: 白 solid, 板 outlined. Placeholder until the outlined-path SVG
+     lockup from the design handoff exists — this one depends on a system CJK serif. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect width="64" height="64" fill="#101013"/>
+  <text x="32" y="47" font-family="'Noto Serif JP','Hiragino Mincho ProN','Yu Mincho',serif"
+        font-size="52" font-weight="600" text-anchor="middle" fill="#f4f4f2">白</text>
+</svg>

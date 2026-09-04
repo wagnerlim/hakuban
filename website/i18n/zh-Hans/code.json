@@ -1,0 +1,188 @@
+{
+  "home.heroLead": {
+    "message": "一个跑在终端里的看板：你的智能体同样在上面干活 —— 而卡片换列时会发生什么，由你声明。"
+  },
+  "theme.colorToggle.ariaLabel.mode.system": {
+    "message": "系统",
+    "description": "The name for the system color mode"
+  },
+  "theme.colorToggle.ariaLabel.mode.light": {
+    "message": "浅色",
+    "description": "The name for the light color mode"
+  },
+  "theme.colorToggle.ariaLabel.mode.dark": {
+    "message": "深色",
+    "description": "The name for the dark color mode"
+  },
+  "home.eyebrow": {
+    "message": "hakuban，“白板”"
+  },
+  "home.heroSub": {
+    "message": "每张卡片、每个看板都是磁盘上的一个 Markdown 文件，所以 AI 读写它们的方式和你完全一样 —— 它只是文本。每一列是一个状态，每个状态由你定义：跑脚本、发邮件、打版本标签、把任务交出去。Hakuban 提供看板；流程是一张白纸。"
+  },
+  "home.cta": {
+    "message": "查看看板格式 →"
+  },
+  "home.expectation": {
+    "message": "个人项目 · 无技术支持 · PR 可能会搁置 · MIT"
+  },
+  "home.assetTag": {
+    "message": "在此放入素材"
+  },
+  "home.assetTitle": {
+    "message": "asciinema —— 一张卡片穿过一列"
+  },
+  "home.assetNote": {
+    "message": "智能体移动卡片时的实时 TUI，以及手动拖拽做同一件事。重点是这次状态转移，而不是它执行了什么。"
+  },
+  "home.boardKicker": {
+    "message": "看板"
+  },
+  "home.boardTitle": {
+    "message": "一台住在磁盘上的状态机。"
+  },
+  "home.boardLead": {
+    "message": "看板是一个带 YAML frontmatter 的 .md（列，以及每列做什么），每张卡片是另一个 .md：frontmatter 加上 markdown 正文，笔记就住在那里。磁盘是唯一真相来源，并且有两个合法写入方 —— TUI，以及手动编辑文件的人：你，或者一个智能体。写入始终是原子的；TUI 每秒左右重读磁盘，所以智能体移动的卡片会当着你的面出现。"
+  },
+  "home.yamlGuide": {
+    "message": "这里一次只放一张卡片。"
+  },
+  "home.yamlInstruction": {
+    "message": "用你自己的话写下该发生什么。"
+  },
+  "home.fieldColumns": {
+    "message": "流水线的状态，按顺序。"
+  },
+  "home.fieldOnEnter": {
+    "message": "指令 —— 由无界面智能体执行的自然语言。"
+  },
+  "home.fieldCmd": {
+    "message": "脚本 —— shell，卡片以 JSON 从 stdin 传入。"
+  },
+  "home.fieldTools": {
+    "message": "本看板的指令唯一可用的工具清单。"
+  },
+  "home.fieldGuide": {
+    "message": "该列的说明。只读，永不执行。"
+  },
+  "home.contractTag": {
+    "message": "契约"
+  },
+  "home.contractBody": {
+    "message": "钩子失败即中止移动。卡片留在原处，并显示原因 —— 无论是人拖动的，还是智能体调用了 hakuban move。"
+  },
+  "home.cardAgentsTitle": {
+    "message": "默认面向智能体"
+  },
+  "home.cardAgentsBody": {
+    "message": "无界面子命令 move 和 progress 让智能体在没有终端的情况下推动流水线。"
+  },
+  "home.cardHandsTitle": {
+    "message": "需要时用手"
+  },
+  "home.cardHandsBody": {
+    "message": "拖动卡片，触发的是同样的钩子。可拖动显示 grab，拖动中显示 grabbing；单击选中，双击激活。"
+  },
+  "home.cardHttpTitle": {
+    "message": "二进制不说 HTTP"
+  },
+  "home.cardHttpBody": {
+    "message": "Hakuban 从不访问网络，钩子才访问。集成靠组合 —— 这是原则，不是缺口。"
+  },
+  "home.exKicker": {
+    "message": "可以声明什么"
+  },
+  "home.exTitle": {
+    "message": "四个看板。没有一个随工具附带。"
+  },
+  "home.exLead": {
+    "message": "这些是例子，不是功能。作者自己的看板把任务交给一个开 PR 的智能体 —— 只是 N 种流程之一，你的没有理由长成那样。"
+  },
+  "home.ex1Title": {
+    "message": "通知客户"
+  },
+  "home.ex1Body": {
+    "message": "“根据卡片笔记写一段简短更新，发送到 frontmatter 里的地址。”"
+  },
+  "home.ex2Title": {
+    "message": "拆分卡片"
+  },
+  "home.ex2Body": {
+    "message": "“如果笔记描述了多个交付物，就为每个交付物建一张卡片，本卡片保留为父卡。”"
+  },
+  "home.ex3Title": {
+    "message": "跑检查清单"
+  },
+  "home.ex3Body": {
+    "message": "一个 shell 脚本：测试、linter、覆盖率下限。非零退出，卡片就出不了 Doing。"
+  },
+  "home.ex4Title": {
+    "message": "交给智能体"
+  },
+  "home.ex4Body": {
+    "message": "作者的看板在 2026-08-29 完成了卡片 → 实现 → PR 通过评审，用时 9 分 18 秒。真实发生，但依然只是一个例子。"
+  },
+  "home.honestTag": {
+    "message": "实话"
+  },
+  "home.honestBody": {
+    "message": "在干净的机器上这个智能体演示跑不起来：它需要 jq、已登录的 gh、付费的 Claude Code 订阅，以及 herdr 多路复用器。这里的定位是“看看是怎么做的”，而不是“装上就能用”。"
+  },
+  "home.distKicker": {
+    "message": "关键区别"
+  },
+  "home.distTitle": {
+    "message": "指令不是脚本。"
+  },
+  "home.distLead": {
+    "message": "两者都在同一次状态转移时触发，所以看起来可以互换。并不能。要分享一个看板，重要的不是文件说了什么 —— 而是它能做什么。"
+  },
+  "home.colScript": {
+    "message": "确定性 shell"
+  },
+  "home.colInstruction": {
+    "message": "自然语言，无界面智能体"
+  },
+  "home.rowBehavior": {
+    "message": "行为"
+  },
+  "home.behaviorScript": {
+    "message": "确定性 —— 你读到的就是它做的。"
+  },
+  "home.behaviorInstruction": {
+    "message": "非确定性 —— 你不知道它会做什么。"
+  },
+  "home.rowCapability": {
+    "message": "能力上限"
+  },
+  "home.capScript": {
+    "message": "无限 —— bash 里不存在权限模型。"
+  },
+  "home.capInstruction": {
+    "message": "有界 —— 一行就写完了：agent_tools。"
+  },
+  "home.rowReview": {
+    "message": "审阅可扩展吗？"
+  },
+  "home.reviewScript": {
+    "message": "不 —— 没人会去审 93 次 jq 调用。"
+  },
+  "home.reviewInstruction": {
+    "message": "可以 —— 能力上限就是一份短清单。"
+  },
+  "home.rowPortability": {
+    "message": "可移植性"
+  },
+  "home.portScript": {
+    "message": "把你绑在某个文件系统、某个二进制、某个 $HOME 上。"
+  },
+  "home.portInstruction": {
+    "message": "什么都不绑：它描述的是意图。"
+  },
+  "home.doctrineTag": {
+    "message": "项目主张："
+  },
+  "home.doctrineBody": {
+    "message": "指令才是格式；_cmd 是债 —— 为精确控制留的逃生口，代价是别人跑不起来的看板。"
+  }
+}
