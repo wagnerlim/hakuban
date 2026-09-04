@@ -1,0 +1,4 @@
+# @swc/core and core-js run a postinstall (docusaurus faster + polyfills).
+allowBuilds:
+  '@swc/core': true
+  core-js: true

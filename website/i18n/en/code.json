@@ -1,0 +1,14 @@
+{
+  "theme.colorToggle.ariaLabel.mode.dark": {
+    "description": "The name for the dark color mode",
+    "message": "dark"
+  },
+  "theme.colorToggle.ariaLabel.mode.light": {
+    "description": "The name for the light color mode",
+    "message": "light"
+  },
+  "theme.colorToggle.ariaLabel.mode.system": {
+    "description": "The name for the system color mode",
+    "message": "system"
+  }
+}

@@ -1,0 +1,16 @@
+# binários
+/hakuban
+/dist/
+*.exe
+
+# go
+/vendor/
+
+# dados locais de dev (tasks de teste)
+/.hakuban-data/
+
+# macOS
+.DS_Store
+
+# worktrees de agente (cópias locais de outros cards)
+/.claude/worktrees/
