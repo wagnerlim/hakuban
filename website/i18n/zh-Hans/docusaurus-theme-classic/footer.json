@@ -3,10 +3,6 @@
     "message": "文档",
     "description": "The title of the footer links column with title=Docs in the footer"
   },
-  "link.title.Not in scope": {
-    "message": "不在范围内",
-    "description": "The title of the footer links column with title=Not in scope in the footer"
-  },
   "link.item.label.Board format": {
     "message": "看板格式",
     "description": "The label of footer link with label=Board format linking to /docs/board-format"
@@ -18,18 +14,6 @@
   "link.item.label.Examples": {
     "message": "示例",
     "description": "The label of footer link with label=Examples linking to /docs/examples"
-  },
-  "link.item.label.No marketplace": {
-    "message": "没有市场",
-    "description": "The label of footer link with label=No marketplace linking to /docs/intro"
-  },
-  "link.item.label.No web UI": {
-    "message": "没有网页界面",
-    "description": "The label of footer link with label=No web UI linking to /docs/intro"
-  },
-  "link.item.label.Single-player, local": {
-    "message": "本地、单人",
-    "description": "The label of footer link with label=Single-player, local linking to /docs/intro"
   },
   "copyright": {
     "message": "<div class=\"footer-brand\"><span class=\"lockup\" style=\"font-size:22px\"><span class=\"lockup-solid\">白</span><span class=\"lockup-outline\">板</span></span><span class=\"footer-wordmark\">Hakuban</span></div><div class=\"footer-legal\">MIT。主题配色分别归功于 Catppuccin、Nord、Dracula、Gruvbox、Solarized、Tokyo Night、Kanagawa、Rosé Pine 和 One Dark。内置 19 套主题；新增一套就是一个 struct。</div>",

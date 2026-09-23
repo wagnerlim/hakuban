@@ -88,14 +88,6 @@ const config: Config = {
             {label: 'Examples', to: '/docs/examples'},
           ],
         },
-        {
-          title: 'Not in scope',
-          items: [
-            {label: 'No marketplace', to: '/docs/intro'},
-            {label: 'No web UI', to: '/docs/intro'},
-            {label: 'Single-player, local', to: '/docs/intro'},
-          ],
-        },
       ],
       copyright:
         `<div class="footer-brand">${lockup(22)}<span class="footer-wordmark">Hakuban</span></div>` +
