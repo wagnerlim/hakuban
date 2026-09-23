@@ -55,7 +55,7 @@ func TestMoveHeadlessHookFails(t *testing.T) {
 	s, _ := headlessStore(t, board)
 	id := saveCard(t, s, "FROM")
 	if err := MoveHeadless(s, id, "TO", &bytes.Buffer{}); err == nil {
-		t.Fatal("hook que falha devia retornar erro")
+		t.Fatal("a failing hook should return an error")
 	}
 	if got := s.Get(id).Status; got != "FROM" {
 		t.Fatalf("card devia ficar em FROM quando o hook falha, veio %q", got)

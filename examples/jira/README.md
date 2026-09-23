@@ -2,7 +2,7 @@
 
 **Example** scripts that connect a hakuban board to a Jira project **by
 composition**: the binary speaks no HTTP, it just fires these scripts (see
-[`docs/objetivos.md`](../../docs/objetivos.md) → F16/F22). Adapt at will.
+[`docs/objectives.md`](../../docs/objectives.md) → F16/F22). Adapt at will.
 
 - **`jira-sync.sh`** — *pull*. Runs a bound column's JQL and materializes
   read-only mirrors in `~/.hakuban/jira/<KEY>.md`.

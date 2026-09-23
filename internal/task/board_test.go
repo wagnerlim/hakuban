@@ -22,11 +22,11 @@ func TestFieldFilterKeep(t *testing.T) {
 		t.Error("card de 3 dias devia ser escondido")
 	}
 	if !f.IsField() {
-		t.Error("filtro com Field devia ser field filter")
+		t.Error("a filter with Field should be a field filter")
 	}
 	// a tracker filter (no Field) never hides; an unknown field is a no-op (keeps).
 	if !(Filter{Value: "x"}).Keep(old, now) {
-		t.Error("filtro de tracker não devia esconder nada")
+		t.Error("a tracker filter should not hide anything")
 	}
 	if !(Filter{Field: "bogus", WithinDays: 1}).Keep(old, now) {
 		t.Error("campo desconhecido devia ser no-op")
@@ -50,11 +50,11 @@ func TestBoards(t *testing.T) {
 	}
 	for _, want := range []string{"trabalho", "ideias"} {
 		if !names[want] {
-			t.Errorf("Boards() não trouxe %q; veio %v", want, names)
+			t.Errorf("Boards() did not return %q; got %v", want, names)
 		}
 	}
 	if names[InboxID] {
-		t.Errorf("Boards() não devia trazer board embutido (id vazio); veio %v", names)
+		t.Errorf("Boards() should not return a built-in board (empty id); got %v", names)
 	}
 	if got := s.BoardTasks("trabalho"); len(got) != 1 || got[0].Title != "relatório" {
 		t.Errorf("BoardTasks(trabalho): %v", got)
@@ -68,7 +68,7 @@ func TestBoards(t *testing.T) {
 		t.Fatal(err)
 	}
 	if s2.BoardName("ideias") != "Ideias" {
-		t.Errorf("board 'ideias' não persistiu: nome %q", s2.BoardName("ideias"))
+		t.Errorf("board 'ideas' did not persist: name %q", s2.BoardName("ideias"))
 	}
 }
 
@@ -88,18 +88,18 @@ func TestBoardColumns(t *testing.T) {
 	empty := []string{}
 	must(t, s.SaveBoard(&Board{ID: "novo", Name: "Novo", Columns: &empty}))
 	if got := s.ColumnsFor("novo"); len(got) != 0 {
-		t.Errorf("board novo devia ter 0 colunas, veio %v", got)
+		t.Errorf("a new board should have 0 columns, got %v", got)
 	}
 	// Custom order persists on disk.
-	custom := []string{"ideias", "fazendo", "revisão", "pronto"}
+	custom := []string{"ideas", "doing", "review", "done"}
 	must(t, s.SaveBoard(&Board{ID: "novo", Name: "Novo", Columns: &custom}))
 	s2, err := Open(dir)
 	if err != nil {
 		t.Fatal(err)
 	}
 	got := s2.ColumnsFor("novo")
-	if len(got) != 4 || got[0] != "ideias" || got[3] != "pronto" {
-		t.Errorf("colunas custom não persistiram na ordem: %v", got)
+	if len(got) != 4 || got[0] != "ideas" || got[3] != "done" {
+		t.Errorf("custom columns did not persist in order: %v", got)
 	}
 	// DeleteBoard removes the board with no tasks.
 	must(t, s2.DeleteBoard("novo"))
@@ -135,18 +135,18 @@ func TestColumnBinding(t *testing.T) {
 	}
 	a, ok := s2.BindingFor("pessoal", "TO-DO")
 	if !ok || a.JQL == "" || a.OnEnter != "~/hooks/create.sh" {
-		t.Fatalf("binding TO-DO não persistiu: ok=%v %+v", ok, a)
+		t.Fatalf("the TO-DO binding did not persist: ok=%v %+v", ok, a)
 	}
 	// the guide is a plain struct field: it must survive SaveBoard (a loose YAML key would
 	// be dropped on re-marshal — that is the whole point of parsing it into the struct).
 	if a.Guide != "move it forward to refine" {
-		t.Errorf("guide não persistiu: %q", a.Guide)
+		t.Errorf("guide did not persist: %q", a.Guide)
 	}
 	if !s2.ColumnBound("pessoal", "TO-DO") {
-		t.Error("TO-DO com JQL devia ser bound")
+		t.Error("TO-DO with a JQL should be bound")
 	}
 	if s2.ColumnBound("pessoal", "DRAFTS") {
-		t.Error("DRAFTS sem action não devia ser bound")
+		t.Error("DRAFTS with no action should not be bound")
 	}
 	// card fields survive + Mirror()
 	var mirror *Task
@@ -156,7 +156,7 @@ func TestColumnBinding(t *testing.T) {
 		}
 	}
 	if mirror == nil || mirror.Source != SourceJira || !mirror.Mirror() {
-		t.Fatalf("espelho não persistiu jira/source: %+v", mirror)
+		t.Fatalf("the mirror did not persist jira/source: %+v", mirror)
 	}
 }
 
@@ -179,7 +179,7 @@ func TestMirrorScan(t *testing.T) {
 	// Deleting a mirror has to target jira/, not tasks/
 	must(t, s.Delete("ABC-7"))
 	if _, err := os.Stat(filepath.Join(jiraDir(dir), "ABC-7.md")); !os.IsNotExist(err) {
-		t.Error("Delete não removeu o espelho de jira/")
+		t.Error("Delete did not remove the jira/ mirror")
 	}
 }
 
@@ -199,7 +199,7 @@ func TestReconcileMirrors(t *testing.T) {
 		t.Fatal(err)
 	}
 	if p := s.Get("P-1"); p == nil || !p.Mirror() || p.Status != "TODO" || p.Priority != "normal" {
-		t.Fatalf("P-1 não virou espelho com default de prioridade: %+v", p)
+		t.Fatalf("P-1 did not become a mirror with the default priority: %+v", p)
 	}
 
 	// 2nd sync: P-1 left (completed elsewhere), P-2 changed column, P-3 is new.
@@ -212,13 +212,13 @@ func TestReconcileMirrors(t *testing.T) {
 		t.Error("P-1 devia ter sido removida (stale)")
 	}
 	if p := s.Get("P-2"); p == nil || p.Status != "DONE" {
-		t.Errorf("P-2 devia repuxar pra DONE: %+v", p)
+		t.Errorf("P-2 should have been pulled back to DONE: %+v", p)
 	}
 	if s.Get("P-3") == nil {
 		t.Error("P-3 (nova) devia existir")
 	}
 	if s.Get("X-9") == nil {
-		t.Error("espelho de outro board não devia ser removido")
+		t.Error("another board's mirror should not be removed")
 	}
 
 	// an empty sync (agent gave up / [] ) must NOT delete the existing mirrors —
@@ -228,7 +228,7 @@ func TestReconcileMirrors(t *testing.T) {
 		t.Fatal(err)
 	}
 	if len(s.tasks) != before || s.Get("P-2") == nil || s.Get("P-3") == nil {
-		t.Errorf("sync vazio não devia apagar espelhos (antes=%d, depois=%d)", before, len(s.tasks))
+		t.Errorf("an empty sync should not delete mirrors (before=%d, after=%d)", before, len(s.tasks))
 	}
 }
 
@@ -258,6 +258,6 @@ issue_url: 'https://acme.atlassian.net/browse/{key}'
 		t.Fatalf("sem key deveria ser vazio: %q", got)
 	}
 	if got := s.IssueURL("inexistente", "ACME-17"); got != "" {
-		t.Fatalf("board sem template deveria ser vazio: %q", got)
+		t.Fatalf("a board with no template should be empty: %q", got)
 	}
 }

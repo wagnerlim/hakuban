@@ -590,10 +590,10 @@ func (m *Model) boardSyncIntention(board string) string {
 	if len(jqls) == 0 {
 		return ""
 	}
-	return "Liste no Jira (connector Atlassian/Rovo via MCP) as issues que casam com esta JQL:\n\n    " +
+	return "List the Jira issues (Atlassian/Rovo connector over MCP) matching this JQL:\n\n    " +
 		strings.Join(jqls, " OR ") +
-		"\n\nResponda SOMENTE com um array JSON (sem prosa, sem cercas ```), um objeto por " +
-		"issue com os campos: key (string), summary (string), status (string, o NOME do " +
+		"\n\nReply with ONLY a JSON array (no prose, no ``` fences), one object per " +
+		"issue with the fields: key (string), summary (string), status (string, the NAME of the " +
 		"status atual), priority (string, o nome da prioridade ou \"\").\n" +
 		`Exemplo: [{"key":"ABC-1","summary":"t","status":"Concluído","priority":"High"}]`
 }

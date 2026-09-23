@@ -93,22 +93,22 @@ func TestThemePickerSelects(t *testing.T) {
 	key("j") // cursor on "Theme"
 	enter()  // opens the picker
 	if m.mode != modePicker {
-		t.Fatalf("enter no tema não abriu o picker: mode=%d", m.mode)
+		t.Fatalf("enter on the theme did not open the picker: mode=%d", m.mode)
 	}
 	// cursor starts on the current theme (themeNames[0]); descend 1 and select
 	key("j")
 	if m.cfg.Theme == themeNames[1] {
-		t.Fatal("preview não devia ter salvado antes do enter")
+		t.Fatal("the preview should not have saved before enter")
 	}
 	enter() // select
 	if m.mode != modeSettings {
-		t.Fatalf("enter no picker não voltou pro settings: mode=%d", m.mode)
+		t.Fatalf("enter on the picker did not go back to settings: mode=%d", m.mode)
 	}
 	if m.cfg.Theme != themeNames[1] {
-		t.Fatalf("tema não selecionado: %q", m.cfg.Theme)
+		t.Fatalf("theme not selected: %q", m.cfg.Theme)
 	}
 	if got := s.LoadConfig(); got.Theme != themeNames[1] {
-		t.Fatalf("tema não persistiu no disco: %q", got.Theme)
+		t.Fatalf("theme did not persist to disk: %q", got.Theme)
 	}
 }
 
@@ -130,10 +130,10 @@ func TestPreviewPane(t *testing.T) {
 
 	out := m.boardView()
 	if got := len(strings.Split(out, "\n")); got != m.h {
-		t.Fatalf("board com painel não cabe em h: %d linhas, quer %d", got, m.h)
+		t.Fatalf("the board with the panel does not fit in h: %d lines, want %d", got, m.h)
 	}
 	if !strings.Contains(out, "comprar café") {
-		t.Fatal("painel não mostrou o título do card selecionado")
+		t.Fatal("the panel did not show the selected card's title")
 	}
 }
 
@@ -142,13 +142,13 @@ func TestClipLines(t *testing.T) {
 	in := "a\nb\nc\nd\ne"
 	got := strings.Split(clipLines(in, 3), "\n")
 	if len(got) != 3 {
-		t.Fatalf("clip pra 3 deu %d linhas", len(got))
+		t.Fatalf("clipping to 3 gave %d lines", len(got))
 	}
 	if !strings.Contains(got[2], "enter") {
 		t.Fatalf("última linha devia marcar o corte, veio %q", got[2])
 	}
 	if clipLines("a\nb", 5) != "a\nb" {
-		t.Fatal("conteúdo menor que n não devia mudar")
+		t.Fatal("content shorter than n should not change")
 	}
 }
 
@@ -170,25 +170,25 @@ func TestLangPickerSelects(t *testing.T) {
 	key("j") // cursor on the "Language" row (index 3)
 	enter()  // opens the picker
 	if m.mode != modePicker {
-		t.Fatalf("enter no idioma não abriu o picker: mode=%d", m.mode)
+		t.Fatalf("enter on the language did not open the picker: mode=%d", m.mode)
 	}
 	key("j") // move to the next language (preview)
 	key("<") // go back without selecting → language unchanged
 	if m.mode != modeSettings {
-		t.Fatalf("'<' não voltou pro settings: mode=%d", m.mode)
+		t.Fatalf("'<' did not go back to settings: mode=%d", m.mode)
 	}
 	if m.cfg.Lang != langNames[0] {
-		t.Fatalf("'<' não devia ter trocado o idioma: %q", m.cfg.Lang)
+		t.Fatalf("'<' should not have switched the language: %q", m.cfg.Lang)
 	}
 	// reopen and actually select
 	enter()
 	key("j")
 	enter()
 	if m.cfg.Lang != langNames[1] {
-		t.Fatalf("idioma não selecionado: %q", m.cfg.Lang)
+		t.Fatalf("language not selected: %q", m.cfg.Lang)
 	}
 	if got := s.LoadConfig(); got.Lang != langNames[1] {
-		t.Fatalf("idioma não persistiu: %q", got.Lang)
+		t.Fatalf("language did not persist: %q", got.Lang)
 	}
 }
 
@@ -218,19 +218,19 @@ func TestDataDirMove(t *testing.T) {
 	m.setCursor = dirRow
 	m.openDirBrowser()
 	if m.mode != modeDirBrowser {
-		t.Fatalf("não abriu o navegador: mode=%d", m.mode)
+		t.Fatalf("the browser did not open: mode=%d", m.mode)
 	}
 	m.browsePath, m.browseCursor = to, 0 // pretends it navigated to the destination, cursor on "use this"
 	enter()                              // select → asks for confirmation
 	if m.mode != modeConfirmMove {
-		t.Fatalf("não pediu confirmação de mover: mode=%d", m.mode)
+		t.Fatalf("it did not ask to confirm the move: mode=%d", m.mode)
 	}
 	enter() // confirm move
 	if m.store.Dir() != to {
-		t.Fatalf("store não reapontou: %q", m.store.Dir())
+		t.Fatalf("the store did not repoint: %q", m.store.Dir())
 	}
 	if !task.HasData(to) || task.HasData(from) {
-		t.Fatalf("dados não migraram: to=%v from=%v", task.HasData(to), task.HasData(from))
+		t.Fatalf("the data did not migrate: to=%v from=%v", task.HasData(to), task.HasData(from))
 	}
 }
 
@@ -262,7 +262,7 @@ func TestLiveReload(t *testing.T) {
 	}
 	m.Update(reloadTickMsg{})
 	if got := len(m.cols[0]); got != before+1 {
-		t.Fatalf("card externo não apareceu: antes=%d depois=%d", before, got)
+		t.Fatalf("the external card did not show up: before=%d after=%d", before, got)
 	}
 }
 
@@ -283,7 +283,7 @@ func TestBrowseFilter(t *testing.T) {
 	// key flow: '/' activates, 'd' types, esc clears
 	m.updateDirBrowser(tea.KeyPressMsg{Text: "/", Code: '/'})
 	if !m.browseFiltering {
-		t.Fatal("'/' não ativou o filtro")
+		t.Fatal("'/' did not activate the filter")
 	}
 	m.updateBrowseFilter(tea.KeyPressMsg{Text: "d", Code: 'd'})
 	if m.browseFilter != "d" || len(m.filteredDirs()) != 3 { // Documents, Downloads, dev
@@ -291,7 +291,7 @@ func TestBrowseFilter(t *testing.T) {
 	}
 	m.updateBrowseFilter(tea.KeyPressMsg{Code: tea.KeyEsc})
 	if m.browseFilter != "" || m.browseFiltering {
-		t.Fatal("esc não limpou o filtro")
+		t.Fatal("esc did not clear the filter")
 	}
 }
 
@@ -323,7 +323,7 @@ func TestMouseTabs(t *testing.T) {
 				return r
 			}
 		}
-		t.Fatal("região não encontrada")
+		t.Fatal("region not found")
 		return clickRegion{}
 	}
 	click := func(r clickRegion, b tea.MouseButton) {
@@ -332,18 +332,18 @@ func TestMouseTabs(t *testing.T) {
 
 	click(region(func(_ int, id string) bool { return id == "work" }), tea.MouseLeft)
 	if m.activeBoardID() != "work" {
-		t.Fatalf("esquerda não ativou work: ativo=%q", m.activeBoardID())
+		t.Fatalf("left did not activate work: active=%q", m.activeBoardID())
 	}
 
 	n := len(m.open)
 	click(region(func(_ int, id string) bool { return id == "home" }), tea.MouseMiddle)
 	if len(m.open) != n-1 || m.isOpen("home") {
-		t.Fatalf("meio não fechou home: open=%v", m.open)
+		t.Fatalf("middle did not close home: open=%v", m.open)
 	}
 
 	click(region(func(idx int, _ string) bool { return idx == -1 }), tea.MouseLeft)
 	if m.mode != modeNewBoard {
-		t.Fatalf("clique no + não abriu novo board: mode=%d", m.mode)
+		t.Fatalf("clicking + did not open a new board: mode=%d", m.mode)
 	}
 }
 
@@ -368,7 +368,7 @@ func TestCardDrag(t *testing.T) {
 	id := r.id
 	m.Update(tea.MouseClickMsg{X: r.col*m.colW + 2, Y: r.y0, Button: tea.MouseLeft})
 	if !m.draggingCard || m.dragCardID != id {
-		t.Fatalf("não pegou o card: dragging=%v id=%q", m.draggingCard, m.dragCardID)
+		t.Fatalf("the card was not grabbed: dragging=%v id=%q", m.draggingCard, m.dragCardID)
 	}
 	doingX := 1*m.colW + 2 // doing column
 	m.Update(tea.MouseMotionMsg{X: doingX, Y: 8, Button: tea.MouseLeft})
@@ -377,7 +377,7 @@ func TestCardDrag(t *testing.T) {
 	}
 	m.Update(tea.MouseReleaseMsg{X: doingX, Y: 8})
 	if m.draggingCard {
-		t.Fatal("release não terminou o arraste")
+		t.Fatal("release did not end the drag")
 	}
 	s2, err := task.Open(dir) // reopen from disk
 	if err != nil {
@@ -449,12 +449,12 @@ func TestMouseCloseButtons(t *testing.T) {
 		}
 	}
 	if !found {
-		t.Fatal("aba 'work' sem região de fechar (✕)")
+		t.Fatal("the 'work' tab has no close region (✕)")
 	}
 	n := len(m.open)
 	m.Update(tea.MouseClickMsg{X: closeR.x0, Y: 0, Button: tea.MouseLeft})
 	if len(m.open) != n-1 || m.isOpen("work") {
-		t.Fatalf("✕ da aba não fechou: open=%v", m.open)
+		t.Fatalf("the tab's ✕ did not close it: open=%v", m.open)
 	}
 
 	m.startNewBoard()
@@ -462,7 +462,7 @@ func TestMouseCloseButtons(t *testing.T) {
 	// red dot: on the top border, after the gap (modalX+3, modalY)
 	m.Update(tea.MouseClickMsg{X: m.modalX + 3, Y: m.modalY, Button: tea.MouseLeft})
 	if m.mode != modeBoard {
-		t.Fatalf("bolinha vermelha não fechou o modal: mode=%d", m.mode)
+		t.Fatalf("the red dot did not close the modal: mode=%d", m.mode)
 	}
 }
 
@@ -483,21 +483,21 @@ func TestMouseDrag(t *testing.T) {
 	gx, gy := x0+m.modalW/2, y0+2                                    // title bar, away from the dots
 	m.Update(tea.MouseClickMsg{X: gx, Y: gy, Button: tea.MouseLeft}) // grab
 	if !m.dragging {
-		t.Fatal("agarrar a barra de título não iniciou o arraste")
+		t.Fatal("grabbing the title bar did not start the drag")
 	}
 	m.Update(tea.MouseMotionMsg{X: gx + 5, Y: gy + 3, Button: tea.MouseLeft}) // move +5,+3
 	if m.modalX != x0+5 || m.modalY != y0+3 {
-		t.Fatalf("modal não seguiu: (%d,%d), esperado (%d,%d)", m.modalX, m.modalY, x0+5, y0+3)
+		t.Fatalf("the modal did not follow: (%d,%d), expected (%d,%d)", m.modalX, m.modalY, x0+5, y0+3)
 	}
 	m.Update(tea.MouseReleaseMsg{X: x0 + 7, Y: y0 + 3})
 	if m.dragging {
-		t.Fatal("release não parou o arraste")
+		t.Fatal("release did not stop the drag")
 	}
 
 	m.render()
 	m.Update(tea.MouseClickMsg{X: m.modalX + 2, Y: m.modalY + m.modalH - 1, Button: tea.MouseLeft})
 	if m.dragging {
-		t.Fatal("clique fora do título (rodapé) não devia iniciar arraste")
+		t.Fatal("a click outside the title (the footer) should not start a drag")
 	}
 }
 
@@ -595,7 +595,7 @@ func TestFilterTagCompound(t *testing.T) {
 
 	m.updateFilter(tea.KeyPressMsg{Code: tea.KeyTab}) // opens the dropdown
 	if !m.filterDropOpen {
-		t.Fatal("tab não abriu o dropdown")
+		t.Fatal("tab did not open the dropdown")
 	}
 	m.updateFilter(tea.KeyPressMsg{Code: tea.KeyDown})  // all → FRONTEND
 	m.updateFilter(tea.KeyPressMsg{Code: tea.KeyEnter}) // select
@@ -617,7 +617,7 @@ func TestFilterTagCompound(t *testing.T) {
 	m.input.SetValue("")
 	m.recomputeFilter()
 	if m.filterTag != "" || len(m.filterHits) != 3 {
-		t.Fatalf("voltar pra todas: tag=%q hits=%d", m.filterTag, len(m.filterHits))
+		t.Fatalf("back to all: tag=%q hits=%d", m.filterTag, len(m.filterHits))
 	}
 }
 
@@ -644,34 +644,34 @@ func TestKeymap(t *testing.T) {
 
 	m.rebind(kaAdd, "n") // remaps new task to 'n'
 	if m.keys[kaAdd] != "n" || m.actionFor("n") != kaAdd {
-		t.Fatalf("rebind não aplicou: %q", m.keys[kaAdd])
+		t.Fatalf("the rebind did not apply: %q", m.keys[kaAdd])
 	}
 	if got := reopen().Keys["add"]; got != "n" {
-		t.Fatalf("override não persistiu no disco: %q", got)
+		t.Fatalf("the override did not persist to disk: %q", got)
 	}
 
 	m.rebind(kaFind, "n") // 'n' already belongs to add → conflict, doesn't save
 	if m.keys[kaFind] != "/" || m.keymapConflict != kaAdd {
-		t.Fatalf("conflito não barrou: find=%q conflict=%q", m.keys[kaFind], m.keymapConflict)
+		t.Fatalf("the conflict was not blocked: find=%q conflict=%q", m.keys[kaFind], m.keymapConflict)
 	}
 
 	m.rebind(kaAdd, "esc") // reserved → doesn't save
 	if m.keys[kaAdd] != "n" || m.keymapConflict != "reserved" {
-		t.Fatalf("reservada não barrou: add=%q conflict=%q", m.keys[kaAdd], m.keymapConflict)
+		t.Fatalf("the reserved key was not blocked: add=%q conflict=%q", m.keys[kaAdd], m.keymapConflict)
 	}
 
 	m.rebind(kaAdd, defaultKeyFor(kaAdd)) // back to default → config cleared
 	if m.keys[kaAdd] != "a" {
-		t.Fatalf("reset não voltou ao default: %q", m.keys[kaAdd])
+		t.Fatalf("reset did not go back to the default: %q", m.keys[kaAdd])
 	}
 	if got := reopen().Keys; len(got) != 0 {
-		t.Fatalf("config devia ficar sem overrides, veio %v", got)
+		t.Fatalf("the config should be left with no overrides, got %v", got)
 	}
 
 	// render smoke test: open modal + capturing must not panic and show the label
 	m.startKeymap()
 	if out := m.keymapBox(); !strings.Contains(out, msg.keyLabels[kaAdd]) {
-		t.Fatal("modal de atalhos não renderizou o rótulo da 1ª ação")
+		t.Fatal("the shortcuts modal did not render the first action's label")
 	}
 	m.keymapCapturing = true
 	if out := m.keymapBox(); !strings.Contains(out, msg.keymapPress) {
@@ -705,10 +705,10 @@ func TestTags(t *testing.T) {
 	m.updateTagForm(tea.KeyPressMsg{Code: tea.KeyRight}) // mauve → blue
 	m.updateTagForm(enter)
 	if len(m.cfg.Tags) != 1 || m.cfg.Tags[0].Color != "blue" {
-		t.Fatalf("criação pelo form falhou: %+v", m.cfg.Tags)
+		t.Fatalf("creation through the form failed: %+v", m.cfg.Tags)
 	}
 	if got := reopen().Tags; len(got) != 1 || got[0].Name != "urgente" || got[0].Color != "blue" {
-		t.Fatalf("tag não persistiu: %+v", got)
+		t.Fatalf("the tag did not persist: %+v", got)
 	}
 
 	// dedup: "URGENTE" (different case) is ignored
@@ -723,7 +723,7 @@ func TestTags(t *testing.T) {
 	m.tagCursor = 0
 	m.openTagForm(0)
 	if m.input.Value() != "urgente" || m.tagColorSel != hueIndex("blue") || m.colorInput.Value() != "" {
-		t.Fatalf("edição não prefilou: nome=%q sel=%d hex=%q", m.input.Value(), m.tagColorSel, m.colorInput.Value())
+		t.Fatalf("editing did not prefill: name=%q sel=%d hex=%q", m.input.Value(), m.tagColorSel, m.colorInput.Value())
 	}
 	// typing in the color field jumps to the hex slot; complete it and save along with the description
 	m.tagFieldFocus(1)
@@ -735,12 +735,12 @@ func TestTags(t *testing.T) {
 	m.descInput.SetValue("prioridade máxima")
 	m.updateTagForm(enter)
 	if td := m.cfg.Tags[0]; td.Color != "#ff8800" || td.Desc != "prioridade máxima" || td.Name != "urgente" {
-		t.Fatalf("edição não salvou direito: %+v", td)
+		t.Fatalf("editing did not save correctly: %+v", td)
 	}
 
 	// color resolution: hex passes through; hue matches; outside the catalog falls back to mauve
 	if hueColor("#ff8800") != "#ff8800" || !isHexColor("#ff8800") || isHexColor("blue") {
-		t.Fatal("hex não resolveu direito")
+		t.Fatal("the hex did not resolve correctly")
 	}
 	if tagColor("URGENTE", m.cfg.Tags) != "#ff8800" {
 		t.Fatal("tagColor devia casar case-insensitive")
@@ -752,11 +752,11 @@ func TestTags(t *testing.T) {
 	// render smoke test: list and form don't panic and show the content
 	m.startTags()
 	if !strings.Contains(m.tagsBox(), "urgente") {
-		t.Fatal("tagsBox não renderizou a tag")
+		t.Fatal("tagsBox did not render the tag")
 	}
 	m.openTagForm(0)
 	if !strings.Contains(m.tagFormBox(), msg.fTagName) {
-		t.Fatal("tagFormBox não renderizou o campo Nome")
+		t.Fatal("tagFormBox did not render the Name field")
 	}
 
 	// delete empties the catalog and clears the config
@@ -768,7 +768,7 @@ func TestTags(t *testing.T) {
 		t.Fatal("tagsBox vazio devia mostrar o empty-state")
 	}
 	if got := reopen().Tags; len(got) != 0 {
-		t.Fatalf("config devia ficar sem tags, veio %+v", got)
+		t.Fatalf("the config should be left with no tags, got %+v", got)
 	}
 }
 
@@ -795,7 +795,7 @@ func TestCardTagWrapAlign(t *testing.T) {
 		}
 	}
 	if frontLine == "" || infraLine == "" {
-		t.Fatalf("tags não quebraram em 2 linhas:\n%s", clean)
+		t.Fatalf("the tags did not wrap into 2 lines:\n%s", clean)
 	}
 	if a, b := strings.Index(frontLine, "FRONTEND"), strings.Index(infraLine, "INFRA"); a != b {
 		t.Errorf("pílula desalinhada na 2ª linha: FRONTEND col %d, INFRA col %d", a, b)
@@ -835,7 +835,7 @@ func TestCardTags(t *testing.T) {
 		t.Fatalf("toggle on: %v", got)
 	}
 	if s2, _ := task.Open(dir); len(s2.Get(id).Tags) != 1 { // persisted to disk?
-		t.Fatal("tag não persistiu no .md")
+		t.Fatal("the tag did not persist in the .md")
 	}
 
 	m.updateCardTags(toggle) // unchecks FRONTEND
@@ -852,7 +852,7 @@ func TestCardTags(t *testing.T) {
 		t.Fatalf("extra fora do catálogo: %v", rows)
 	}
 	if !strings.Contains(m.cardTagsBox(), "FRONTEND") {
-		t.Fatal("cardTagsBox não renderizou")
+		t.Fatal("cardTagsBox did not render")
 	}
 }
 
@@ -871,10 +871,10 @@ func TestMovePersists(t *testing.T) {
 	m.move(1) // backlog → doing
 
 	if m.col != 1 {
-		t.Errorf("cursor deveria seguir o card pra coluna 1, ficou em %d", m.col)
+		t.Errorf("the cursor should follow the card to column 1, it stayed at %d", m.col)
 	}
 	if len(m.cols[0]) != 0 || len(m.cols[1]) != 1 {
-		t.Errorf("board não reagrupou: backlog=%d doing=%d", len(m.cols[0]), len(m.cols[1]))
+		t.Errorf("the board did not regroup: backlog=%d doing=%d", len(m.cols[0]), len(m.cols[1]))
 	}
 	s2, _ := task.Open(dir) // reopen from disk
 	if got := s2.All()[0].Status; got != task.StatusDoing {
@@ -911,7 +911,7 @@ func TestScrollColBy(t *testing.T) {
 		bodyH:    10,           // col0 fits (4<=10), col1 overflows (40>10)
 	}
 	if m.scrollColBy(0, 1) { // col0 fits → no scroll, falls back to pan
-		t.Fatal("coluna que cabe não devia rolar")
+		t.Fatal("a column that fits should not scroll")
 	}
 	if !m.scrollColBy(1, 1) || m.col != 1 || m.row[1] != 1 {
 		t.Fatalf("col1 devia rolar/selecionar e ativar: col=%d row=%d", m.col, m.row[1])
@@ -930,24 +930,24 @@ func TestScrollColBy(t *testing.T) {
 }
 
 // cardAnnotation: a barra do % aparece no meio do caminho e SOME em 100. Quem zera o
-// Progress é o move; um agente que carimba 100 depois de mover deixava a barra cheia
-// grudada no card pra sempre (ACME-1234, 03/08/2026).
+// Progress is cleared by the move; an agent stamping 100 after moving used to leave a full
+// bar stuck on the card forever (ACME-1234, 2026-08-03).
 func TestCardAnnotationHidesFullBar(t *testing.T) {
 	m, id := boardWithAction(t, `"true"`) // Model completo: loaderStyle precisa do store
 	card := m.store.Get(id)
 
-	// baseline = anotação sem barra nenhuma. Comparar contra ela em vez de procurar "40%"
-	// no texto: o showPct do loaderStyle é por coluna, então o número pode nem aparecer.
+	// baseline = the annotation with no bar at all. Compare against it instead of looking for
+	// "40%" in the text: loaderStyle's showPct is per column, so the number may not even appear.
 	card.Progress = 0
 	baseline := m.cardAnnotation(card, 20)
 
 	card.Progress = 40
 	if got := m.cardAnnotation(card, 20); got == baseline {
-		t.Errorf("40%% devia desenhar a barra, veio a anotação normal %q", got)
+		t.Errorf("40%% should draw the bar, got the normal annotation %q", got)
 	}
 
 	card.Progress = 100
 	if got := m.cardAnnotation(card, 20); got != baseline {
-		t.Errorf("100%% não devia desenhar barra: esperava %q, veio %q", baseline, got)
+		t.Errorf("100%% should not draw a bar: expected %q, got %q", baseline, got)
 	}
 }

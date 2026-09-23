@@ -11,7 +11,7 @@ func TestCatalogsComplete(t *testing.T) {
 	for _, name := range langNames {
 		m, ok := langs[name]
 		if !ok {
-			t.Fatalf("idioma %q em langNames não tem catálogo", name)
+			t.Fatalf("language %q in langNames has no catalog", name)
 		}
 		v := reflect.ValueOf(m)
 		for i := 0; i < v.NumField(); i++ {
@@ -23,7 +23,7 @@ func TestCatalogsComplete(t *testing.T) {
 		// shows a blank line)
 		for _, a := range keyActions {
 			if m.keyLabels[a.id] == "" {
-				t.Errorf("idioma %q: keyLabels sem rótulo pra ação %q", name, a.id)
+				t.Errorf("language %q: keyLabels has no label for action %q", name, a.id)
 			}
 		}
 	}

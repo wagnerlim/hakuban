@@ -4130,9 +4130,9 @@ func (m *Model) cardAnnotation(t *task.Task, w int) string {
 		return m.actionBar(m.action, w)
 	}
 	// live % stamped by the action (e.g. agent working the card) — wins over key/parent.
-	// 100 NÃO desenha: quem limpa o Progress é o move (headless.go, action.go), então um agente
-	// que carimba 100 depois de mover deixa a barra cheia grudada no card pra sempre. Cheia não
-	// informa nada — o card já está na coluna seguinte. Só o meio do caminho vale pixel.
+	// 100 does NOT draw: the move is what clears Progress (headless.go, action.go), so an agent
+	// that stamps 100 after moving leaves a full bar stuck on the card forever. A full bar says
+	// nothing — the card is already in the next column. Only the middle of the way earns a pixel.
 	if t.Progress > 0 && t.Progress < 100 {
 		style, showPct := m.loaderStyle(t.Status)
 		return progressBar(t.Progress, style, showPct)

@@ -39,20 +39,20 @@ func TestMoveData(t *testing.T) {
 		t.Fatal("origem ainda tem dados após mover")
 	}
 	if !HasData(to) {
-		t.Fatal("destino não recebeu os dados")
+		t.Fatal("the target did not receive the data")
 	}
 
 	// target now has data → a new source can't move there
 	other := t.TempDir()
 	if err := MoveData(other, to); !errors.Is(err, ErrTargetHasData) {
-		t.Fatalf("colisão devia abortar com ErrTargetHasData, veio: %v", err)
+		t.Fatalf("a collision should abort with ErrTargetHasData, got: %v", err)
 	}
 }
 
 func TestHasData(t *testing.T) {
 	dir := t.TempDir()
 	if HasData(dir) {
-		t.Fatal("dir vazio não tem dados")
+		t.Fatal("an empty dir has no data")
 	}
 	if err := os.MkdirAll(filepath.Join(dir, "tasks"), 0o755); err != nil {
 		t.Fatal(err)
@@ -61,6 +61,6 @@ func TestHasData(t *testing.T) {
 		t.Fatal(err)
 	}
 	if !HasData(dir) {
-		t.Fatal("dir com tasks/*.md tem dados")
+		t.Fatal("a dir with tasks/*.md has data")
 	}
 }

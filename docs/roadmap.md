@@ -1,74 +1,75 @@
-# Roadmap — features desenhadas (ainda não 100% implementadas)
+# Roadmap — designed features (not yet 100% implemented)
 
-Decisões de design já conversadas. Ordem pensada: **chaves → subtask → dependência
-→ coluna-objeto (categoria/Jira)**. Cada uma deixa a próxima mais legível.
+Design decisions already discussed. The intended order: **keys → subtask → dependency
+→ column-as-object (category/Jira)**. Each one makes the next more legible.
 
-## 1. Chaves legíveis por board (`KEY-NN`) — EM IMPLEMENTAÇÃO
+## 1. Human-readable per-board keys (`KEY-NN`) — IN PROGRESS
 
-Substitui o id aleatório (`4kjjy4`) por chave incremental por board, estilo Jira.
+Replaces the random id (`4kjjy4`) with an incremental per-board key, Jira style.
 
-- Board ganha `key` (ex: `CASA`), **editável na config**, default derivado do nome
-  ("Casa de férias" → `CASA`).
-- Card id = `<KEY>-<NN>`, e **o id é o nome do arquivo** (`tasks/CASA-01.md`) — as
-  referências no `.md` (`parent`, futuro `blocked_by`) ficam legíveis. Mín. 2
-  dígitos (`CASA-01`).
-- **Próximo número = `max(KEY-* existentes) + 1`** (derivado, sem contador salvo;
-  ponytail). Trade-off aceito: apagar o mais alto pode reusar o número.
-- **Chave única entre boards** (validada). Motivo: `tasks/` é plano e o id é o
-  arquivo → `KEY-NN` tem que ser globalmente único; e referência de dependência
-  cruza boards, então precisa ser inequívoca.
-- **Rename da chave** = cascata: renomeia os arquivos do board + reescreve as
-  referências (`parent`, e no futuro `blocked_by`) em todos os boards.
-- **Número do card nunca é renomeado** (âncora estável, igual Jira).
-- Migração de dados antigos: **não** — vamos zerar o data dir e começar do zero.
+- A board gains a `key` (e.g. `HOME`), **editable in the config**, defaulting to one
+  derived from the name ("Holiday house" → `HOLI`).
+- A card's id is `<KEY>-<NN>`, and **the id is the file name** (`tasks/HOME-01.md`) — so
+  the references inside the `.md` (`parent`, and later `blocked_by`) stay readable.
+  Minimum 2 digits (`HOME-01`).
+- **The next number = `max(existing KEY-*) + 1`** (derived, with no saved counter;
+  ponytail). Accepted trade-off: deleting the highest one can reuse its number.
+- **Keys are unique across boards** (validated). The reason: `tasks/` is flat and the id
+  is the file → `KEY-NN` has to be globally unique; and a dependency reference crosses
+  boards, so it has to be unambiguous.
+- **Renaming a key** cascades: it renames the board's files and rewrites the references
+  (`parent`, and later `blocked_by`) across every board.
+- **A card's number is never renamed** (a stable anchor, like Jira).
+- Migrating old data: **no** — we will wipe the data dir and start from scratch.
 
-## 2. Subtask (hierarquia pai/filho) — IMPLEMENTADO
+## 2. Subtask (parent/child hierarchy) — IMPLEMENTED
 
-Modelo (`Task.Parent`, `Store.Children`, herança da raiz) + view.
+The model (`Task.Parent`, `Store.Children`, inheritance from the root) + the view.
 
-- `S` num card cria uma subtask (filho); o id sai da chave do board do pai
-  (`K-02`), Parent liga na raiz, nasce na 1ª coluna.
-- Filho **aparece no board** na coluna do próprio status, com a tag `↳ PAI`
-  (ex: `↳ K-01`). Card pai mostra **progresso** `▓▓▓░░ 3/5` (barra + contagem).
-- Detalhe do pai lista as subtasks (`✓`/`▢`).
-- **"Done" = última coluna** (heurística `doneCol`); vira categoria de coluna
-  quando o item 4 chegar. Progresso conta **filhos diretos**.
-- Pendente: aninhamento profundo, cor de borda ligando pai/filhos, criar subtask
-  também de dentro do detalhe.
+- `S` on a card creates a subtask (a child); the id comes from the parent's board key
+  (`K-02`), Parent links to the root, and it is born in the first column.
+- A child **shows up on the board** in the column of its own status, with the tag
+  `↳ PARENT` (e.g. `↳ K-01`). The parent card shows **progress** `▓▓▓░░ 3/5` (a bar +
+  a count).
+- The parent's detail view lists the subtasks (`✓`/`▢`).
+- **"Done" = the last column** (the `doneCol` heuristic); it becomes a column category
+  once item 4 lands. Progress counts **direct children**.
+- Still pending: deep nesting, a border color linking parent/children, creating a subtask
+  from inside the detail view too.
 
-## 3. Dependência (bloqueia / bloqueado por) — SEPARADO de subtask
+## 3. Dependency (blocks / blocked by) — SEPARATE from subtask
 
-Relação nova, **não** é pai/filho. Campo novo no frontmatter:
+A new relation, **not** parent/child. A new frontmatter field:
 
-- `blocked_by: [CASA-02]` no card bloqueado; o "desbloqueia" é **derivado** (quem
-  lista este id no seu `blocked_by`), igual `Children` deriva de `Parent`.
-- Pode **cruzar boards**.
-- **Comportamento: só mostra** (informativo) — selo 🔒 no mini-card enquanto há
-  bloqueador pendente; no detalhe "bloqueado por / desbloqueia".
-- **Não trava** o "done" por ora — porque não existe definition of done (coluna é
-  texto solto). Travar fica pra depois (depende do item 4).
+- `blocked_by: [HOME-02]` on the blocked card; the "unblocks" side is **derived** (whoever
+  lists this id in their `blocked_by`), the same way `Children` derives from `Parent`.
+- It can **cross boards**.
+- **Behaviour: display only** (informational) — a 🔒 badge on the mini-card while a
+  blocker is still pending; in the detail view, "blocked by / unblocks".
+- It does **not** gate "done" for now — because there is no definition of done (a column
+  is free text). Gating comes later (it depends on item 4).
 
-## 4. Coluna vira objeto (categoria / Jira / config por lane) — futuro
+## 4. A column becomes an object (category / Jira / per-lane config) — future
 
-Hoje coluna é `string`. Três features querem a mesma promoção pra objeto:
+Today a column is a `string`. Three features want the same promotion to an object:
 
 ```yaml
 columns:
-  - {name: "A fazer", category: todo}
-  - {name: "Feito",   category: done}   # futuro: jira_status_id: 10001
+  - {name: "To do", category: todo}
+  - {name: "Done",  category: done}   # future: jira_status_id: 10001
 ```
 
-- **Categoria** `todo|doing|done` (= status category do Jira) dá o *definition of
-  done* sem máquina de estados. Opcional: board sem coluna `done` simplesmente não
-  tem conceito de conclusão.
-- Habilita: progresso por "filhos em done", travar-done da dependência,
-  mapeamento Jira, e a config por lane (engrenagem ⚙).
-- **Máquina de estados nível 2** (regras de transição entre colunas): **descartada
-  por ora** (YAGNI; briga com "hackeável, config opcional" do produto). Só se
-  houver dor concreta.
+- A **category** `todo|doing|done` (= Jira's status category) gives you the *definition of
+  done* without a state machine. Optional: a board with no `done` column simply has no
+  concept of completion.
+- It enables: progress by "children in done", the dependency's done-gating, the Jira
+  mapping, and the per-lane config (the ⚙ gear).
+- **A level-2 state machine** (transition rules between columns): **dropped for now**
+  (YAGNI; it fights the product's "hackable, config optional" stance). Only if there is
+  concrete pain.
 
-## Integração Jira (norte)
+## Jira integration (the north star)
 
-As chaves (`KEY-NN`), a categoria de coluna e a config por lane (⚙) convergem pro
-mapeamento com o Jira: chave ↔ issue key, categoria ↔ status category, lane ↔
-status. O ponto de extensão na UI é `updateLaneConfig`/`laneConfigBox`.
+The keys (`KEY-NN`), the column category and the per-lane config (⚙) converge on the
+mapping to Jira: key ↔ issue key, category ↔ status category, lane ↔ status. The UI
+extension point is `updateLaneConfig`/`laneConfigBox`.

@@ -79,7 +79,7 @@ func runProgress(args []string) int {
 	}
 	t := store.Get(args[0])
 	if t == nil {
-		fmt.Fprintf(os.Stderr, "hakuban: card %q não existe\n", args[0])
+		fmt.Fprintf(os.Stderr, "hakuban: card %q does not exist\n", args[0])
 		return 1
 	}
 	t.Progress = pct

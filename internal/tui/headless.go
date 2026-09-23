@@ -15,12 +15,12 @@ import (
 func MoveHeadless(s *task.Store, id, toCol string, out io.Writer) error {
 	t := s.Get(id)
 	if t == nil {
-		return fmt.Errorf("card %q não existe", id)
+		return fmt.Errorf("card %q does not exist", id)
 	}
 	board := s.EffectiveProject(id)
 	from := t.Status
 	if from == toCol {
-		return nil // já está na coluna: no-op
+		return nil // already in that column: no-op
 	}
 	found := false
 	for _, c := range s.ColumnsFor(board) {
@@ -30,7 +30,7 @@ func MoveHeadless(s *task.Store, id, toCol string, out io.Writer) error {
 		}
 	}
 	if !found {
-		return fmt.Errorf("coluna %q não existe no board %q", toCol, board)
+		return fmt.Errorf("column %q does not exist on board %q", toCol, board)
 	}
 
 	// exit→enter chaining: run the origin's on_exit first, then the destination's

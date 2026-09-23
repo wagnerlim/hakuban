@@ -9,7 +9,7 @@ func TestThemes(t *testing.T) {
 	seen := map[string]bool{}
 	for _, th := range themes {
 		if th.name == "" {
-			t.Fatal("tema sem nome")
+			t.Fatal("theme with no name")
 		}
 		if seen[th.name] {
 			t.Fatalf("nome de tema duplicado: %q", th.name)
@@ -29,7 +29,7 @@ func TestThemes(t *testing.T) {
 	}
 
 	if themeByName("catppuccin").name != "catppuccin" {
-		t.Fatal("themeByName não achou catppuccin")
+		t.Fatal("themeByName did not find catppuccin")
 	}
 	if themeByName("inexistente").name != themes[0].name {
 		t.Fatal("desconhecido devia cair no default (themes[0])")

@@ -1,21 +1,21 @@
 # hakuban
 
-Gerenciador de tasks no terminal, construído no ecossistema [Charm](https://charm.sh)
+Terminal task manager, built on the [Charm](https://charm.sh) ecosystem
 (Bubble Tea + Lip Gloss + Bubbles + Glamour).
 
-## Objetivos
+## Goals
 
-- TUI própria em Go (aprendizado + controle total).
-- Notas/contexto rico por task via Markdown (renderizado com Glamour).
-- Storage em arquivos, amigável a git e legível por ferramentas externas.
+- Own TUI in Go (learning + full control).
+- Rich per-task notes/context through Markdown (rendered with Glamour).
+- File-based storage, git-friendly and readable by external tools.
 
 ## Status
 
-Bootstrap. Arquitetura em discussão.
+Bootstrap. Architecture under discussion.
 
 ## Stack
 
-- [Bubble Tea](https://github.com/charmbracelet/bubbletea) — framework TUI (arquitetura Elm).
-- [Lip Gloss](https://github.com/charmbracelet/lipgloss) — estilo/layout.
-- [Bubbles](https://github.com/charmbracelet/bubbles) — componentes (list, textinput, viewport).
-- [Glamour](https://github.com/charmbracelet/glamour) — renderização de Markdown.
+- [Bubble Tea](https://github.com/charmbracelet/bubbletea) — TUI framework (Elm architecture).
+- [Lip Gloss](https://github.com/charmbracelet/lipgloss) — styling/layout.
+- [Bubbles](https://github.com/charmbracelet/bubbles) — components (list, textinput, viewport).
+- [Glamour](https://github.com/charmbracelet/glamour) — Markdown rendering.

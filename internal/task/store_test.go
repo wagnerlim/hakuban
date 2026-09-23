@@ -23,13 +23,13 @@ func TestRoundTrip(t *testing.T) {
 		Project:  "casa",
 		Tags:     []string{"compras"},
 		Due:      due,
-		Notes:    "## Notas\nmoído, não em grão.",
+		Notes:    "## Notes\nground, not whole bean.",
 	}
 	if err := s.Save(orig); err != nil {
 		t.Fatal(err)
 	}
 	if orig.ID == "" {
-		t.Fatal("Save não gerou id")
+		t.Fatal("Save did not generate an id")
 	}
 	// file is <id>.md
 	if _, err := os.Stat(filepath.Join(dir, "tasks", orig.ID+".md")); err != nil {
@@ -53,7 +53,7 @@ func TestRoundTrip(t *testing.T) {
 	if got.Due == nil || !got.Due.Equal(due.Time) {
 		t.Errorf("due: %v", got.Due)
 	}
-	if got.Notes != "## Notas\nmoído, não em grão." {
+	if got.Notes != "## Notes\nground, not whole bean." {
 		t.Errorf("notes: %q", got.Notes)
 	}
 	if got.Status != StatusBacklog {
@@ -84,7 +84,7 @@ func TestInheritance(t *testing.T) {
 	}
 	// child stores only its own on disk (inheritance is derived, not copied)
 	if !reflect.DeepEqual(s.Get(grand.ID).Tags, []string(nil)) {
-		t.Errorf("neto não deveria guardar tags próprias, tem %v", s.Get(grand.ID).Tags)
+		t.Errorf("the grandchild should not store its own tags, it has %v", s.Get(grand.ID).Tags)
 	}
 	if kids := s.Children(root.ID); len(kids) != 1 || kids[0].ID != child.ID {
 		t.Errorf("Children(root) errado: %v", kids)
@@ -94,7 +94,7 @@ func TestInheritance(t *testing.T) {
 	root.Project = "apê"
 	must(t, s.Save(root))
 	if got := s.EffectiveProject(grand.ID); got != "apê" {
-		t.Errorf("herança não é dinâmica: quero apê, veio %q", got)
+		t.Errorf("inheritance is not dynamic: wanted flat, got %q", got)
 	}
 }
 
@@ -132,6 +132,6 @@ func TestCommentsRoundTrip(t *testing.T) {
 		t.Fatal("task sumiu")
 	}
 	if !reflect.DeepEqual(got.Comments, orig.Comments) {
-		t.Fatalf("comments não sobreviveram:\n got  %+v\n want %+v", got.Comments, orig.Comments)
+		t.Fatalf("comments did not survive:\n got  %+v\n want %+v", got.Comments, orig.Comments)
 	}
 }

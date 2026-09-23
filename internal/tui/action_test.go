@@ -62,17 +62,17 @@ func TestActionSuccess(t *testing.T) {
 	m, id := boardWithAction(t, `"printf '1/2 validando\n2/2 criando\n'"`)
 	cmd := m.move(1) // DRAFTS → TO-DO fires on_enter
 	if cmd == nil || m.action == nil {
-		t.Fatal("move numa coluna bound devia iniciar a ação")
+		t.Fatal("a move into a bound column should start the action")
 	}
 	if got := m.store.Get(id).Status; got != "DRAFTS" {
-		t.Fatalf("status não devia mudar antes do sucesso, veio %q", got)
+		t.Fatalf("the status should not change before success, got %q", got)
 	}
 	pump(t, m, cmd)
 	if !m.action.done || m.action.failed {
-		t.Fatalf("ação devia terminar em sucesso: %+v", m.action)
+		t.Fatalf("the action should end in success: %+v", m.action)
 	}
 	if got := m.store.Get(id).Status; got != "TO-DO" {
-		t.Fatalf("sucesso devia commitar o move pra TO-DO, veio %q", got)
+		t.Fatalf("success should commit the move to TO-DO, got %q", got)
 	}
 }
 
@@ -89,7 +89,7 @@ func TestActionProgressStamped(t *testing.T) {
 		m.Update(<-m.actionCh)
 	}
 	if got := m.store.Get(id).Status; got != "TO-DO" {
-		t.Fatalf("sucesso devia commitar pra TO-DO, veio %q", got)
+		t.Fatalf("success should commit to TO-DO, got %q", got)
 	}
 	if got := m.store.Get(id).Progress; got != 0 {
 		t.Fatalf("commit devia zerar o progress, veio %d", got)
@@ -169,14 +169,14 @@ func TestActionExitFailsSkipsEnter(t *testing.T) {
 	m.move(1) // FROM → TO
 	pumpChain(t, m)
 	if !m.action.failed {
-		t.Fatalf("exit falho devia deixar a ação em failed: %+v", m.action)
+		t.Fatalf("a failed exit should leave the action in failed: %+v", m.action)
 	}
 	if got := m.store.Get(id).Status; got != "FROM" {
 		t.Fatalf("card devia ficar na origem quando o exit falha, veio %q", got)
 	}
 	data, _ := os.ReadFile(order)
 	if got := strings.Fields(string(data)); len(got) != 1 || got[0] != "exit" {
-		t.Fatalf("enter não devia rodar após exit falho, ordem veio %v", got)
+		t.Fatalf("enter should not run after a failed exit, the order was %v", got)
 	}
 }
 
@@ -187,14 +187,14 @@ func TestActionStamping(t *testing.T) {
 	cmd := m.move(1) // DRAFTS → TO-DO
 	pump(t, m, cmd)
 	if !m.action.done || m.action.failed {
-		t.Fatalf("ação devia terminar em sucesso: %+v", m.action)
+		t.Fatalf("the action should end in success: %+v", m.action)
 	}
 	if m.store.Get(id) != nil {
 		t.Errorf("card local %q devia ter sumido após virar espelho", id)
 	}
 	mir := m.store.Get("ABC-500")
 	if mir == nil || !mir.Mirror() || mir.Jira != "ABC-500" || mir.Status != "TO-DO" {
-		t.Fatalf("card não virou espelho ABC-500: %+v", mir)
+		t.Fatalf("the card did not become the ABC-500 mirror: %+v", mir)
 	}
 }
 
@@ -207,12 +207,12 @@ func TestParseAgentLine(t *testing.T) {
 	if isResult || ev == nil || ev.label != "transitionJiraIssue" || ev.pct != 25 {
 		t.Fatalf("tool_use devia virar passo (25%%, label curto), veio %+v", ev)
 	}
-	if _, _, _ = parseAgentLine([]byte("não é json"), &step); step != 1 {
-		t.Fatalf("linha não-JSON não devia avançar o passo, step=%d", step)
+	if _, _, _ = parseAgentLine([]byte("not json"), &step); step != 1 {
+		t.Fatalf("a non-JSON line should not advance the step, step=%d", step)
 	}
 	_, isResult, res := parseAgentLine([]byte(`{"type":"result","subtype":"success","result":"feito"}`), &step)
 	if !isResult || res != "feito" {
-		t.Fatalf("result devia sinalizar fim com o texto, isResult=%v res=%q", isResult, res)
+		t.Fatalf("result should signal the end along with the text, isResult=%v res=%q", isResult, res)
 	}
 }
 
@@ -221,11 +221,11 @@ func TestParseAgentLine(t *testing.T) {
 // and the Atlassian connector. Run with: HAKUBAN_JIRA_IT=1 go test -run AgentReal -v ./internal/tui
 func TestAgentRealTransition(t *testing.T) {
 	if os.Getenv("HAKUBAN_JIRA_IT") == "" {
-		t.Skip("integração real: defina HAKUBAN_JIRA_IT=1")
+		t.Skip("real integration: set HAKUBAN_JIRA_IT=1")
 	}
 	ch := make(chan actionEvent, 64)
 	card := cardJSON(&task.Task{ID: "DEMO-1", Jira: "DEMO-1", Title: "placeholder"}, "DOING", "DONE", "demo")
-	go runAgent(`Mova a issue DEMO-1 para "Concluído" no Jira, site acme.atlassian.net. Use o connector Atlassian (Rovo) via MCP.`,
+	go runAgent(`Move issue DEMO-1 to "Done" in Jira, site acme.atlassian.net. Use the Atlassian (Rovo) connector over MCP.`,
 		card, "mcp__claude_ai_Atlassian_Rovo", ch)
 	var last actionEvent
 	for ev := range ch {
@@ -236,20 +236,20 @@ func TestAgentRealTransition(t *testing.T) {
 		}
 	}
 	if !last.ok {
-		t.Fatalf("transição real falhou: %q", last.reason)
+		t.Fatalf("the real transition failed: %q", last.reason)
 	}
 }
 
 // parseSyncIssues extracts the array even with prose and ```json fences around it; text
 // without an array becomes nil (reconcile then empties the mirrors, the expected behavior).
 func TestParseSyncIssues(t *testing.T) {
-	s := "Aqui estão:\n```json\n[{\"key\":\"A-1\",\"summary\":\"x\",\"status\":\"Done\",\"priority\":\"High\"}]\n```\n"
+	s := "Here they are:\n```json\n[{\"key\":\"A-1\",\"summary\":\"x\",\"status\":\"Done\",\"priority\":\"High\"}]\n```\n"
 	got := parseSyncIssues(s)
 	if len(got) != 1 || got[0].Key != "A-1" || got[0].Status != "Done" || got[0].Priority != "High" {
-		t.Fatalf("extração falhou: %+v", got)
+		t.Fatalf("extraction failed: %+v", got)
 	}
 	if parseSyncIssues("nenhum array aqui") != nil {
-		t.Fatal("texto sem array devia dar nil")
+		t.Fatal("text with no array should give nil")
 	}
 }
 
@@ -257,11 +257,11 @@ func TestParseSyncIssues(t *testing.T) {
 // Skipped by default (see TestAgentRealTransition). Proves the PULL side end to end.
 func TestAgentRealSync(t *testing.T) {
 	if os.Getenv("HAKUBAN_JIRA_IT") == "" {
-		t.Skip("integração real: defina HAKUBAN_JIRA_IT=1")
+		t.Skip("real integration: set HAKUBAN_JIRA_IT=1")
 	}
 	ch := make(chan actionEvent, 64)
-	intention := `Liste no Jira (connector Atlassian/Rovo via MCP) as issues que casam com: project = DEMO.
-Responda SOMENTE com um array JSON, um objeto por issue: {key, summary, status, priority}.`
+	intention := `List the Jira issues (Atlassian/Rovo connector over MCP) matching: project = DEMO.
+Reply with ONLY a JSON array, one object per issue: {key, summary, status, priority}.`
 	go runAgent(intention, nil, "mcp__claude_ai_Atlassian_Rovo", ch)
 	var last actionEvent
 	for ev := range ch {
@@ -276,7 +276,7 @@ Responda SOMENTE com um array JSON, um objeto por issue: {key, summary, status, 
 	issues := parseSyncIssues(last.payload)
 	t.Logf("payload=%q → %d issues", last.payload, len(issues))
 	if len(issues) == 0 || issues[0].Key == "" {
-		t.Fatalf("agente não devolveu issues parseáveis: %+v", issues)
+		t.Fatalf("the agent did not return parseable issues: %+v", issues)
 	}
 }
 
@@ -292,7 +292,7 @@ func TestResolveIntention(t *testing.T) {
 	if got := resolveIntention("hooks/fin.md", dir); got != "conteúdo do arquivo" {
 		t.Fatalf("caminho relativo devia ler o arquivo, veio %q", got)
 	}
-	inline := "Mova a issue {{.jira}} para Done"
+	inline := "Move issue {{.jira}} to Done"
 	if got := resolveIntention(inline, dir); got != inline {
 		t.Fatalf("prosa inline devia passar direto, veio %q", got)
 	}
@@ -300,9 +300,9 @@ func TestResolveIntention(t *testing.T) {
 
 // interpolate resolves the card's fields in the intention; a missing field becomes empty, not an error.
 func TestInterpolate(t *testing.T) {
-	got := interpolate("Mova {{.jira}} para Done ({{.title}})", &task.Task{Jira: "ABC-1", Title: "x"})
-	if got != "Mova ABC-1 para Done (x)" {
-		t.Fatalf("interpolação errada: %q", got)
+	got := interpolate("Move {{.jira}} to Done ({{.title}})", &task.Task{Jira: "ABC-1", Title: "x"})
+	if got != "Move ABC-1 to Done (x)" {
+		t.Fatalf("wrong interpolation: %q", got)
 	}
 }
 
@@ -312,7 +312,7 @@ func TestActionStatusEnv(t *testing.T) {
 	m, _ := boardWithAction(t, `"test \"$HAKUBAN_STATUS\" = Done && printf '1/1 ok\n' || { echo sem-status >&2; exit 1; }"`)
 	pump(t, m, m.move(1))
 	if m.action == nil || !m.action.done || m.action.failed {
-		t.Fatalf("HAKUBAN_STATUS não chegou como \"Done\": %+v", m.action)
+		t.Fatalf("HAKUBAN_STATUS did not arrive as \"Done\": %+v", m.action)
 	}
 }
 
@@ -322,14 +322,14 @@ func TestActionFailure(t *testing.T) {
 	m, id := boardWithAction(t, `"echo 1/1 indo; echo 'jira fora do ar' >&2; exit 1"`)
 	cmd := m.move(1)
 	if cmd == nil {
-		t.Fatal("move devia iniciar a ação")
+		t.Fatal("the move should start the action")
 	}
 	pump(t, m, cmd)
 	if !m.action.failed {
-		t.Fatalf("ação devia falhar: %+v", m.action)
+		t.Fatalf("the action should fail: %+v", m.action)
 	}
 	if got := m.store.Get(id).Status; got != "DRAFTS" {
-		t.Fatalf("falha não devia mover o card, veio %q", got)
+		t.Fatalf("a failure should not move the card, got %q", got)
 	}
 	if !strings.Contains(m.action.reason, "jira fora do ar") {
 		t.Fatalf("motivo devia vir do stderr, veio %q", m.action.reason)
@@ -374,7 +374,7 @@ actions:
 	m.reload()
 
 	if !m.canBatch() {
-		t.Fatal("board com binding + sync devia poder sincronizar")
+		t.Fatal("a board with a binding + sync should be able to sync")
 	}
 	got := m.batchQueue() // A=0, B=1 bound; C=2 unbound
 	if len(got) != 2 || got[0].col != 0 || got[1].col != 1 {
@@ -426,28 +426,28 @@ actions:
 	m.reload()
 
 	if got := len(m.columnButtons("A")); got != 2 {
-		t.Fatalf("coluna A devia ter 2 botões, veio %d", got)
+		t.Fatalf("column A should have 2 buttons, got %d", got)
 	}
 	if got := m.footerLabel("A", m.columnButtons("A")); got != "sincronizar ▾" {
-		t.Fatalf("com vários botões o rodapé abre menu: %q", got)
+		t.Fatalf("with several buttons the footer opens a menu: %q", got)
 	}
 	if got := m.footerLabel("B", m.columnButtons("B")); got != "refinar" {
-		t.Fatalf("botão único vai direto: %q", got)
+		t.Fatalf("a single button goes straight through: %q", got)
 	}
 	// A (2 buttons) opens the menu instead of firing; B (single) fires right away.
 	if cmd := m.activateColumn(0); cmd != nil || !m.menuOpen || m.menuCol != 0 {
-		t.Fatal("coluna com vários botões devia abrir o menu, não disparar")
+		t.Fatal("a column with several buttons should open the menu, not fire")
 	}
 	m.menuOpen = false
 	// only `batch: true` enters the board-wide queue
 	q := m.batchQueue()
 	if len(q) != 1 || q[0].col != 0 || q[0].btn != 0 {
-		t.Fatalf("só o botão batch entra na fila do board: %v", q)
+		t.Fatalf("only the batch button enters the board queue: %v", q)
 	}
 	// the script's stdin carries the column's cards
 	cards := columnJSON([]*task.Task{{ID: "x1", Title: "um"}}, "A", "acme")
 	if !strings.Contains(string(cards), `"id":"x1"`) || !strings.HasPrefix(string(cards), "[") {
-		t.Fatalf("stdin do botão devia ser o array de cards da coluna: %s", cards)
+		t.Fatalf("the button's stdin should be the column's card array: %s", cards)
 	}
 }
 
@@ -555,16 +555,16 @@ buttons:
 `)
 	bs := m.boardButtons()
 	if len(bs) != 2 {
-		t.Fatalf("board devia ter 2 botões, veio %d", len(bs))
+		t.Fatalf("the board should have 2 buttons, got %d", len(bs))
 	}
 	if got := m.boardButtonLabel(bs); got != "board ▾" {
-		t.Fatalf("com vários botões a top bar abre menu: %q", got)
+		t.Fatalf("with several buttons the top bar opens a menu: %q", got)
 	}
 	if cmd := m.activateBoard(); cmd != nil || !m.menuOpen || m.menuCol != boardMenuCol || m.menuUp {
-		t.Fatalf("devia abrir o menu do board pra baixo: open=%v col=%d up=%v", m.menuOpen, m.menuCol, m.menuUp)
+		t.Fatalf("it should open the board menu downwards: open=%v col=%d up=%v", m.menuOpen, m.menuCol, m.menuUp)
 	}
-	if got := m.menuRowOf(0); got != 0 { // primeiro botão colado no anchor = 1ª linha
-		t.Fatalf("menu pra baixo desenha na ordem do config, linha do 1º: %d", got)
+	if got := m.menuRowOf(0); got != 0 { // the first button hugging the anchor = row 1
+		t.Fatalf("a downward menu draws in config order, row of the first: %d", got)
 	}
 
 	// legacy: nothing declared, but a column has a batch button → sync-all synthesized

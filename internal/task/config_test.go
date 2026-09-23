@@ -23,9 +23,9 @@ func TestConfigDefaultsAndPartialMerge(t *testing.T) {
 	}
 	got := s.LoadConfig()
 	if !got.PreviewPane || got.DateFormat != "02/01/2006" {
-		t.Fatalf("valores salvos não voltaram: %+v", got)
+		t.Fatalf("saved values did not come back: %+v", got)
 	}
 	if !got.ConfirmDelete || got.Theme != "omni" {
-		t.Fatalf("defaults não preservados no merge: %+v", got)
+		t.Fatalf("defaults not preserved on merge: %+v", got)
 	}
 }

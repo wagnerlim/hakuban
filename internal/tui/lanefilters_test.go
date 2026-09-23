@@ -122,6 +122,6 @@ func TestFilterHasOptions(t *testing.T) {
 		t.Error("contas é simples")
 	}
 	if !filterHasOptions(m.store, "acme", "sprint") {
-		t.Error("sprint tem opções")
+		t.Error("sprint has options")
 	}
 }

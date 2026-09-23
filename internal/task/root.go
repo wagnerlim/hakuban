@@ -56,7 +56,7 @@ func ResolveDir() string {
 func SaveDataDir(dir string) error {
 	p := rootPointerPath()
 	if p == "" {
-		return errors.New("não foi possível localizar o diretório de config do usuário")
+		return errors.New("could not locate the user config directory")
 	}
 	if err := os.MkdirAll(filepath.Dir(p), 0o755); err != nil {
 		return err
