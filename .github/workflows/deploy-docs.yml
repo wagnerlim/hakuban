@@ -25,7 +25,10 @@ jobs:
         working-directory: website
     steps:
       - uses: actions/checkout@v4
+      # The action reads the repo root by default, and package.json lives in website/.
       - uses: pnpm/action-setup@v4
+        with:
+          package_json_file: website/package.json
       - uses: actions/setup-node@v4
         with:
           node-version: 22
