@@ -82,6 +82,7 @@ const config: Config = {
         {
           title: 'Docs',
           items: [
+            {label: 'How it works', to: '/docs/how-it-works'},
             {label: 'In the terminal', to: '/docs/terminal'},
             {label: 'Board format', to: '/docs/board-format'},
             {label: 'Hook contract', to: '/docs/hook-contract'},

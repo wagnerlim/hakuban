@@ -22,5 +22,9 @@
   "link.item.label.In the terminal": {
     "message": "在终端里",
     "description": "The label of footer link with label=In the terminal linking to /docs/terminal"
+  },
+  "link.item.label.How it works": {
+    "message": "它是怎么运作的",
+    "description": "The label of footer link with label=How it works linking to /docs/how-it-works"
   }
 }
