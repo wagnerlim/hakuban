@@ -1,6 +1,7 @@
 # Publishes a release on every semver tag: binaries, checksums, the Homebrew formula and
 # the Scoop manifest (.goreleaser.yaml). TAP_GITHUB_TOKEN = a PAT with contents:write on
 # wagnerlim/homebrew-tap and wagnerlim/scoop-bucket — GITHUB_TOKEN cannot push to other repos.
+# WINGET_GITHUB_TOKEN = a classic PAT with public_repo, for the PR to microsoft/winget-pkgs.
 name: release
 
 on:
@@ -28,3 +29,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAP_GITHUB_TOKEN: ${{ secrets.TAP_GITHUB_TOKEN }}
+          WINGET_GITHUB_TOKEN: ${{ secrets.WINGET_GITHUB_TOKEN }}
