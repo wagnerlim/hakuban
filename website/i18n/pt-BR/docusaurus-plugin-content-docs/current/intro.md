@@ -29,23 +29,44 @@ próprio arquivo do quadro.**
 
 Gravado pelo autor. Sem som.
 
-## Instalação
+## Quick start {#quick-start}
+
+Escolha o seu sistema, copie o bloco e cole num terminal.
+
+**macOS e Linux** — [Homebrew](https://brew.sh):
 
 ```bash
-brew install wagnerlim/tap/hakuban          # macOS e Linux
-
-scoop bucket add wagnerlim https://github.com/wagnerlim/scoop-bucket
-scoop install hakuban                       # Windows
-
-go install github.com/wagnerlim/hakuban/cmd/hakuban@latest   # qualquer lugar com Go
+brew install wagnerlim/tap/hakuban
 ```
 
-`hakuban version` mostra a versão instalada. Nem o brew nem o scoop avisam que saiu versão
-nova: `brew upgrade hakuban` / `scoop update hakuban` quando quiser.
+**Windows** — [Scoop](https://scoop.sh):
+
+```powershell
+scoop bucket add wagnerlim https://github.com/wagnerlim/scoop-bucket
+scoop install hakuban
+```
+
+**Qualquer lugar com Go**:
+
+```bash
+go install github.com/wagnerlim/hakuban/cmd/hakuban@latest
+```
+
+Depois abra e crie o primeiro board — `ctrl+t` arma o prefixo de comandos, `+` cria o
+board:
+
+```bash
+hakuban
+```
+
+`hakuban version` mostra a versão instalada. Quando sai versão nova, o rodapé avisa;
+atualize com `brew upgrade hakuban`, `scoop update hakuban` ou o mesmo `go install`.
 
 No Windows, hooks de script (`on_enter_cmd`, `on_exit_cmd`, o `cmd` do sync) rodam via
 `sh -c`, então precisam de `sh` no `PATH` — Git Bash ou WSL. A TUI e os hooks de instrução
 funcionam sem ele.
+
+### Subcomandos headless
 
 Rodar `hakuban` sem subcomando abre a TUI e exige um TTY. Existem dois subcomandos
 headless para que um agente conduza a esteira sem terminal aberto:

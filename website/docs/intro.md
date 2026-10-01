@@ -29,23 +29,44 @@ board file itself.**
 
 Recorded by the author. No sound.
 
-## Install
+## Quick start {#quick-start}
+
+Pick your system, copy the block, paste it in a terminal.
+
+**macOS and Linux** — [Homebrew](https://brew.sh):
 
 ```bash
-brew install wagnerlim/tap/hakuban          # macOS and Linux
-
-scoop bucket add wagnerlim https://github.com/wagnerlim/scoop-bucket
-scoop install hakuban                       # Windows
-
-go install github.com/wagnerlim/hakuban/cmd/hakuban@latest   # anywhere with Go
+brew install wagnerlim/tap/hakuban
 ```
 
-`hakuban version` prints what you have. Neither brew nor scoop tells you a new version is
-out: `brew upgrade hakuban` / `scoop update hakuban` when you want it.
+**Windows** — [Scoop](https://scoop.sh):
+
+```powershell
+scoop bucket add wagnerlim https://github.com/wagnerlim/scoop-bucket
+scoop install hakuban
+```
+
+**Anywhere with Go**:
+
+```bash
+go install github.com/wagnerlim/hakuban/cmd/hakuban@latest
+```
+
+Then open it and create your first board — `ctrl+t` arms the command prefix, `+` makes
+the board:
+
+```bash
+hakuban
+```
+
+`hakuban version` prints what you have. When a newer release is out, the footer says so;
+update with `brew upgrade hakuban`, `scoop update hakuban` or the same `go install`.
 
 On Windows, script hooks (`on_enter_cmd`, `on_exit_cmd`, the sync `cmd`) run through
 `sh -c`, so they need `sh` on the `PATH` — Git Bash or WSL. The TUI and instruction hooks
 work without it.
+
+### Headless subcommands
 
 Running `hakuban` with no subcommand opens the TUI and needs a TTY. Two headless
 subcommands exist so an agent can drive the belt with no terminal attached:
