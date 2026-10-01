@@ -38,3 +38,21 @@ func TestThemes(t *testing.T) {
 		t.Fatalf("themeNames (%d) != themes (%d)", len(themeNames), len(themes))
 	}
 }
+
+// Muted text (help line, hints, meta labels) has to stay readable in every theme: the
+// hand-typed overlay0 alone fails WCAG AA everywhere (omni was 2.3:1).
+func TestMutedTextContrast(t *testing.T) {
+	for _, th := range themes {
+		if th.name == "terminal" {
+			continue
+		}
+		m, _ := parseHex(readable(th.overlay0, th.text, th.panelBg, minTextContrast))
+		bg, _ := parseHex(th.panelBg)
+		if c := contrast(m, bg); c < minTextContrast {
+			t.Errorf("tema %q: texto apagado com contraste %.1f:1 (< %.1f)", th.name, c, minTextContrast)
+		}
+	}
+	if got := readable("7", "15", "", minTextContrast); got != "7" {
+		t.Fatalf("ANSI color should pass through, got %q", got)
+	}
+}
