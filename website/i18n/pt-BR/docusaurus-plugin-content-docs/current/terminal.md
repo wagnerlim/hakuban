@@ -88,6 +88,15 @@ keys:
   find: f
 ```
 
+O próprio prefixo é a ação `prefix`, remapeável do mesmo jeito. Troque quando o `ctrl+t`
+não chega no hakuban: um terminal no navegador abre aba nova com ele, e um tmux cujo
+prefixo é `C-t` engole a tecla. As dicas na tela acompanham a tecla escolhida.
+
+```yaml
+keys:
+  prefix: ctrl+a
+```
+
 As chaves desse mapa são os ids de ação das tabelas acima.
 
 ## Mouse

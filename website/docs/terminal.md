@@ -88,6 +88,15 @@ keys:
   find: f
 ```
 
+The prefix itself is the `prefix` action, rebindable the same way. Change it when
+`ctrl+t` never reaches hakuban: a terminal in the browser opens a new tab with it, and a
+tmux whose own prefix is `C-t` swallows it. The hints on screen follow the key you pick.
+
+```yaml
+keys:
+  prefix: ctrl+a
+```
+
 The keys of that map are the action ids from the tables above.
 
 ## Mouse
