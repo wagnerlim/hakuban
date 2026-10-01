@@ -3864,10 +3864,10 @@ func (m *Model) boardView() string {
 		h = 30
 	}
 	if len(m.open) == 0 { // no board (new app / last one deleted)
-		return m.tabBar() + "\n\n  " + faint.Render(msg.noBoards) + "\n\n" + helpStyle.Render(msg.hBoard)
+		return m.tabBar() + "\n\n  " + faint.Render(msg.noBoards) + "\n\n" + m.bottomBar()
 	}
 	if len(m.columns) == 0 { // board with no columns: just the header + hint (config opens on its own)
-		return m.tabBar() + "\n\n  " + faint.Render(msg.boardEmpty) + "\n\n" + helpStyle.Render(msg.hBoard)
+		return m.tabBar() + "\n\n  " + faint.Render(msg.boardEmpty) + "\n\n" + m.bottomBar()
 	}
 	// Columns have a fixed width; if not all fit, horizontal scroll per CELL (the whole
 	// board is rendered and cropped to the visible window) — it slides smoothly, it
