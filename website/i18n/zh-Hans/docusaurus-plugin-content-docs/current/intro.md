@@ -23,22 +23,42 @@ title: Hakuban 是什么
 
 由作者录制。无声。
 
-## 安装
+## 快速开始 {#quick-start}
+
+选择你的系统，复制代码块，粘贴到终端。
+
+**macOS 和 Linux** —— [Homebrew](https://brew.sh)：
 
 ```bash
-brew install wagnerlim/tap/hakuban          # macOS 和 Linux
-
-scoop bucket add wagnerlim https://github.com/wagnerlim/scoop-bucket
-scoop install hakuban                       # Windows
-
-go install github.com/wagnerlim/hakuban/cmd/hakuban@latest   # 任何装有 Go 的环境
+brew install wagnerlim/tap/hakuban
 ```
 
-`hakuban version` 显示当前版本。brew 和 scoop 都不会提示新版本发布：需要时运行
-`brew upgrade hakuban` / `scoop update hakuban`。
+**Windows** —— [Scoop](https://scoop.sh)：
+
+```powershell
+scoop bucket add wagnerlim https://github.com/wagnerlim/scoop-bucket
+scoop install hakuban
+```
+
+**任何装有 Go 的环境**：
+
+```bash
+go install github.com/wagnerlim/hakuban/cmd/hakuban@latest
+```
+
+然后打开它并创建第一个看板 —— `ctrl+t` 激活命令前缀，`+` 新建看板：
+
+```bash
+hakuban
+```
+
+`hakuban version` 显示当前版本。有新版本发布时，底部会提示；用 `brew upgrade hakuban`、
+`scoop update hakuban` 或同样的 `go install` 更新。
 
 在 Windows 上，脚本钩子（`on_enter_cmd`、`on_exit_cmd`、同步的 `cmd`）通过 `sh -c` 运行，
 因此 `PATH` 中需要有 `sh`——Git Bash 或 WSL。TUI 和指令钩子无需它即可工作。
+
+### 无界面子命令
 
 不带子命令运行 `hakuban` 会打开 TUI，需要 TTY。另有两个无界面子命令，让智能体在没有终端的情况下推动流水线：
 

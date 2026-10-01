@@ -1,13 +1,15 @@
 import type {ReactNode} from 'react';
 import Layout from '@theme/Layout';
 import {translate} from '@docusaurus/Translate';
+import Link from '@docusaurus/Link';
 import useBaseUrl from '@docusaurus/useBaseUrl';
 import styles from './index.module.css';
 
 /**
  * Homepage. Every visible string goes through translate() with a literal id so
  * `docusaurus write-translations` can extract it. Hard-coded on purpose (identical in all
- * three locales): Hakuban, 白板, the field names, the column labels, the install command
+ * three locales): Hakuban, 白板, the field names, the column labels, the install command (which
+ * links to the Quick start)
  * and the two comparison-column headers.
  */
 function useStrings() {
@@ -277,10 +279,9 @@ function Hero({s}: {s: Strings}) {
           <a className={styles.cta} href="#board">
             {s.cta}
           </a>
-          <code className={styles.installChip}>
-            <span className={styles.prompt}>$</span>go install
-            github.com/wagnerlim/hakuban/cmd/hakuban@latest
-          </code>
+          <Link className={styles.installChip} to="/docs/intro#quick-start">
+            <span className={styles.prompt}>$</span>brew install wagnerlim/tap/hakuban
+          </Link>
         </div>
         <div className={styles.expectation}>{s.expectation}</div>
       </div>
