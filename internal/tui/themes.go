@@ -1,6 +1,11 @@
 package tui
 
-import "charm.land/lipgloss/v2"
+import (
+	"fmt"
+	"math"
+
+	"charm.land/lipgloss/v2"
+)
 
 // palette holds the semantic colors of a theme (F13). The token vocabulary —
 // base/surface0/surface1/overlay0/overlay1/subtext0 plus the named hues (mauve,
@@ -117,6 +122,9 @@ func applyPalette(p palette) {
 	accent := lipgloss.Color(p.accent)
 	surface1 := lipgloss.Color(p.surface1)
 	overlay0 := lipgloss.Color(p.overlay0)
+	// Muted *text* (help line, meta labels, hints) must be readable; overlay0 itself stays
+	// for decoration (the off dot).
+	muted := lipgloss.Color(readable(p.overlay0, p.text, p.panelBg, minTextContrast))
 	rounded := func() lipgloss.Style { return lipgloss.NewStyle().Border(lipgloss.RoundedBorder()) }
 
 	// inactive column border: theme override, else surface1 (subtle)
@@ -128,7 +136,7 @@ func applyPalette(p palette) {
 	colSelStyle = colStyle.BorderForeground(accent)
 	colDropStyle = colStyle.BorderForeground(lipgloss.Color(p.green))
 	titleStyle = lipgloss.NewStyle().Bold(true)
-	helpStyle = lipgloss.NewStyle().Foreground(overlay0)
+	helpStyle = lipgloss.NewStyle().Foreground(muted)
 
 	miniBox = rounded().BorderForeground(colBorder).Padding(0, 1) // inactive card: same color as the inactive column
 	miniBoxSel = rounded().BorderForeground(accent).Padding(0, 1)
@@ -137,8 +145,8 @@ func applyPalette(p palette) {
 	paneBox = rounded().BorderForeground(accent).Padding(0, 1) // highlight border, same as the selected column
 	paneSep = lipgloss.NewStyle().Foreground(colBorder)        // divider in the same color as the inactive column border
 	cardTitle = lipgloss.NewStyle().Bold(true).Foreground(accent)
-	metaKey = lipgloss.NewStyle().Foreground(overlay0).Width(9)
-	faint = lipgloss.NewStyle().Foreground(overlay0)
+	metaKey = lipgloss.NewStyle().Foreground(muted).Width(9)
+	faint = lipgloss.NewStyle().Foreground(muted)
 
 	sbThumb = lipgloss.NewStyle().Foreground(accent)
 	sbTrack = lipgloss.NewStyle().Foreground(surface1)
@@ -157,4 +165,69 @@ func applyPalette(p palette) {
 	dotOff = lipgloss.NewStyle().Foreground(overlay0)
 
 	shadowStyle = lipgloss.NewStyle().Background(lipgloss.Color(p.surfaceDim))
+}
+
+// minTextContrast is WCAG AA for normal text. Every theme's hand-typed overlay0 is a border
+// hue that sits at 1.7–4.0:1 on its own panelBg, so text drawn with it came out unreadable.
+const minTextContrast = 4.5
+
+// readable returns fg blended toward `toward` (the theme's main text) in 5% steps until it
+// reaches min contrast against bg, so the muted text keeps the theme's hue and moves only as
+// far as it has to. Non-hex colors (the ANSI "terminal" theme) come back unchanged: the
+// terminal owns those.
+func readable(fg, toward, bg string, min float64) string {
+	f, ok1 := parseHex(fg)
+	t, ok2 := parseHex(toward)
+	b, ok3 := parseHex(bg)
+	if !ok1 || !ok2 || !ok3 {
+		return fg
+	}
+	// Even the main text can miss the bar (Solarized Light's own base00 is 4.1:1 on base3):
+	// then aim at black or white, whichever contrasts more with bg.
+	if contrast(t, b) < min {
+		t = [3]float64{255, 255, 255}
+		if contrast([3]float64{}, b) > contrast(t, b) {
+			t = [3]float64{}
+		}
+	}
+	for i := 0; i <= 20; i++ {
+		k := float64(i) / 20
+		var c [3]float64
+		for j := range c {
+			c[j] = f[j] + (t[j]-f[j])*k
+		}
+		if contrast(c, b) >= min || i == 20 {
+			return fmt.Sprintf("#%02x%02x%02x", int(math.Round(c[0])), int(math.Round(c[1])), int(math.Round(c[2])))
+		}
+	}
+	return fg // unreachable: i == 20 returns
+}
+
+func parseHex(s string) (c [3]float64, ok bool) {
+	var r, g, b int
+	if len(s) != 7 || s[0] != '#' {
+		return c, false
+	}
+	if _, err := fmt.Sscanf(s, "#%02x%02x%02x", &r, &g, &b); err != nil {
+		return c, false
+	}
+	return [3]float64{float64(r), float64(g), float64(b)}, true
+}
+
+// contrast is the WCAG 2 contrast ratio between two sRGB colors (0..255 channels).
+func contrast(a, b [3]float64) float64 {
+	lum := func(c [3]float64) float64 {
+		var l [3]float64
+		for i, v := range c {
+			v /= 255
+			if v <= 0.03928 {
+				l[i] = v / 12.92
+			} else {
+				l[i] = math.Pow((v+0.055)/1.055, 2.4)
+			}
+		}
+		return 0.2126*l[0] + 0.7152*l[1] + 0.0722*l[2]
+	}
+	la, lb := lum(a), lum(b)
+	return (math.Max(la, lb) + 0.05) / (math.Min(la, lb) + 0.05)
 }
