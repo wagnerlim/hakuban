@@ -60,9 +60,11 @@ scoops:
 # winget: the manifest goes to a fork (wagnerlim/winget-pkgs) and GoReleaser opens the PR
 # to microsoft/winget-pkgs, where a bot validates it and a moderator merges. It needs
 # WINGET_GITHUB_TOKEN, a *classic* PAT with public_repo: a fine-grained one cannot open a
-# PR on a repo another owner holds.
+# PR on a repo another owner holds. Without that secret the upload is skipped (a skip, not
+# a failure), so the rest of the release stays green until winget is set up.
 winget:
   - name: hakuban
+    skip_upload: '{{ if isEnvSet "WINGET_GITHUB_TOKEN" }}false{{ else }}true{{ end }}'
     publisher: wagnerlim
     package_identifier: wagnerlim.hakuban
     publisher_url: https://github.com/wagnerlim
