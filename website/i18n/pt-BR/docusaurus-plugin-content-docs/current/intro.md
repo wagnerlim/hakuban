@@ -32,8 +32,20 @@ Gravado pelo autor. Sem som.
 ## Instalação
 
 ```bash
-go install github.com/wagnerlim/hakuban/cmd/hakuban@latest
+brew install wagnerlim/tap/hakuban          # macOS e Linux
+
+scoop bucket add wagnerlim https://github.com/wagnerlim/scoop-bucket
+scoop install hakuban                       # Windows
+
+go install github.com/wagnerlim/hakuban/cmd/hakuban@latest   # qualquer lugar com Go
 ```
+
+`hakuban version` mostra a versão instalada. Nem o brew nem o scoop avisam que saiu versão
+nova: `brew upgrade hakuban` / `scoop update hakuban` quando quiser.
+
+No Windows, hooks de script (`on_enter_cmd`, `on_exit_cmd`, o `cmd` do sync) rodam via
+`sh -c`, então precisam de `sh` no `PATH` — Git Bash ou WSL. A TUI e os hooks de instrução
+funcionam sem ele.
 
 Rodar `hakuban` sem subcomando abre a TUI e exige um TTY. Existem dois subcomandos
 headless para que um agente conduza a esteira sem terminal aberto:
@@ -47,7 +59,7 @@ Nome de coluna é comparação exata e case-sensitive.
 
 ## Pré-requisitos honestos
 
-O binário em si não precisa de nada além do Go. **A demo de agente não roda numa máquina
+O binário em si não precisa de mais nada. **A demo de agente não roda numa máquina
 limpa.** Ela precisa de:
 
 - `jq`

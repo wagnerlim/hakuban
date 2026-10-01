@@ -32,8 +32,20 @@ Recorded by the author. No sound.
 ## Install
 
 ```bash
-go install github.com/wagnerlim/hakuban/cmd/hakuban@latest
+brew install wagnerlim/tap/hakuban          # macOS and Linux
+
+scoop bucket add wagnerlim https://github.com/wagnerlim/scoop-bucket
+scoop install hakuban                       # Windows
+
+go install github.com/wagnerlim/hakuban/cmd/hakuban@latest   # anywhere with Go
 ```
+
+`hakuban version` prints what you have. Neither brew nor scoop tells you a new version is
+out: `brew upgrade hakuban` / `scoop update hakuban` when you want it.
+
+On Windows, script hooks (`on_enter_cmd`, `on_exit_cmd`, the sync `cmd`) run through
+`sh -c`, so they need `sh` on the `PATH` — Git Bash or WSL. The TUI and instruction hooks
+work without it.
 
 Running `hakuban` with no subcommand opens the TUI and needs a TTY. Two headless
 subcommands exist so an agent can drive the belt with no terminal attached:
@@ -47,7 +59,7 @@ Column names are compared exactly and are case-sensitive.
 
 ## Honest prerequisites
 
-The binary itself needs nothing but Go. **The agent demo does not run on a clean
+The binary itself needs nothing else. **The agent demo does not run on a clean
 machine.** It needs:
 
 - `jq`
