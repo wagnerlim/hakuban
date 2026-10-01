@@ -76,6 +76,13 @@ keys:
   find: f
 ```
 
+前缀本身是 `prefix` 这个 action，同样可以重新绑定。当 `ctrl+t` 到不了 hakuban 时就换掉它：浏览器里的终端会用它新开标签页，而前缀是 `C-t` 的 tmux 会吞掉这个键。屏幕上的提示会跟随你选的键。
+
+```yaml
+keys:
+  prefix: ctrl+a
+```
+
 这个 map 的键就是上面表格里的 action id。
 
 ## 鼠标

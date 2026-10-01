@@ -171,7 +171,7 @@ type Model struct {
 
 	// configurable shortcuts (modeKeymap): action→key resolved (default + overrides)
 	keys            map[string]string
-	prefixArmed     bool // ctrl+t armed the prefix → the next key fires a command
+	prefixArmed     bool // the prefix key (ctrl+t by default) armed the prefix → the next key fires a command
 	keymapCursor    int
 	keymapCapturing bool          // waiting for the next key to rebind the action under the cursor
 	keymapConflict  string        // "" none · id of the conflicting action · "reserved" (esc/ctrl+c)
@@ -1327,10 +1327,11 @@ const (
 	kaCardTags   = "card_tags"
 	kaSync       = "sync"
 	kaQuit       = "quit"
+	// kaPrefix is not a command: its key arms the tmux-style prefix, and the next key
+	// fires one. Rebindable like any action, because ctrl+t never reaches the app in a
+	// browser terminal (new tab) or under a tmux whose own prefix is C-t.
+	kaPrefix = "prefix"
 )
-
-// prefixKey arms the tmux-style prefix; the next key fires a command.
-const prefixKey = "ctrl+t"
 
 // action groups: nav fires directly (no prefix); cmd requires the prefix. They're
 // also the sections of the keybind modal (grpNav → grpCmd, in that order).
@@ -1344,7 +1345,8 @@ var keyActions = []struct{ id, def, grp string }{
 	{kaLeft, "h", grpNav}, {kaDown, "j", grpNav}, {kaUp, "k", grpNav}, {kaRight, "l", grpNav},
 	{kaMoveLeft, "H", grpNav}, {kaMoveRight, "L", grpNav},
 	{kaNextBoard, "tab", grpNav}, {kaPrevBoard, "shift+tab", grpNav}, {kaOpen, "enter", grpNav},
-	// commands — behind the prefix (ctrl+t)
+	// commands — behind the prefix (ctrl+t by default; the prefix itself heads the group)
+	{kaPrefix, "ctrl+t", grpCmd},
 	{kaAdd, "a", grpCmd}, {kaFind, "/", grpCmd}, {kaSubtask, "S", grpCmd},
 	{kaBoardList, "b", grpCmd}, {kaBoardCfg, "c", grpCmd}, {kaLaneCfg, "g", grpCmd},
 	{kaTags, "t", grpCmd}, {kaCardTags, "T", grpCmd}, {kaSettings, "s", grpCmd},
@@ -1423,16 +1425,17 @@ func (m *Model) updateBoard(msg tea.KeyPressMsg) (tea.Model, tea.Cmd) {
 	if m.menuOpen {
 		return m.updateColumnMenu(k)
 	}
-	// tmux-style model: ctrl+t "arms" the prefix; the next key fires ONE command
+	// tmux-style model: the prefix key "arms" the prefix; the next key fires ONE command
 	// and disarms. Navigation (grpNav) and fixed aliases (arrows, ctrl+c) always
 	// apply; commands (grpCmd) only fire with the prefix armed.
 	armed := m.prefixArmed
 	m.prefixArmed = false // every key disarms; we only re-arm for the prefix itself
-	if !armed && k == prefixKey {
+	prefix := m.keys[kaPrefix]
+	if !armed && k == prefix {
 		m.prefixArmed = true
 		return m, nil
 	}
-	if armed && (k == "esc" || k == prefixKey) {
+	if armed && (k == "esc" || k == prefix) {
 		return m, nil // cancels the prefix without firing anything
 	}
 	action := m.actionFor(k)
@@ -3864,10 +3867,10 @@ func (m *Model) boardView() string {
 		h = 30
 	}
 	if len(m.open) == 0 { // no board (new app / last one deleted)
-		return m.tabBar() + "\n\n  " + faint.Render(msg.noBoards) + "\n\n" + m.bottomBar()
+		return m.tabBar() + "\n\n  " + faint.Render(fmt.Sprintf(msg.noBoards, m.keys[kaPrefix])) + "\n\n" + m.bottomBar()
 	}
 	if len(m.columns) == 0 { // board with no columns: just the header + hint (config opens on its own)
-		return m.tabBar() + "\n\n  " + faint.Render(msg.boardEmpty) + "\n\n" + m.bottomBar()
+		return m.tabBar() + "\n\n  " + faint.Render(fmt.Sprintf(msg.boardEmpty, m.keys[kaPrefix])) + "\n\n" + m.bottomBar()
 	}
 	// Columns have a fixed width; if not all fit, horizontal scroll per CELL (the whole
 	// board is rendered and cropped to the visible window) — it slides smoothly, it
@@ -4026,18 +4029,30 @@ func (m *Model) boardView() string {
 }
 
 // bottomBar is the board footer in two states: idle shows only the minimal hint
-// (ctrl+t opens the commands); with the prefix armed it becomes the highlighted
+// (the prefix key opens the commands); with the prefix armed it becomes the highlighted
 // tmux-style bar — PREFIX badge + the list of available commands, cropped to the width.
 func (m *Model) bottomBar() string {
 	if !m.prefixArmed {
-		return helpStyle.Render(msg.hIdle)
+		return helpStyle.Render(fmt.Sprintf(msg.hIdle, m.keys[kaPrefix]))
 	}
 	badge := prefixBadge.Render(" PREFIX ")
-	hints := msg.hPrefix
+	hints := m.prefixHints()
 	if w := m.viewW; w > 0 { // doesn't overflow the window: truncates the commands, keeps the badge
 		hints = ansi.Truncate(hints, max(0, w-lipgloss.Width(badge)-1), "…")
 	}
 	return badge + " " + helpStyle.Render(hints)
+}
+
+// prefixHints lists the commands the armed prefix accepts, each with the key it is bound
+// to right now — read from the keymap, so a rebind shows up here too.
+func (m *Model) prefixHints() string {
+	parts := []string{"esc " + msg.hPrefix["esc"]}
+	for _, a := range keyActions {
+		if lbl, ok := msg.hPrefix[a.id]; ok && a.grp == grpCmd && a.id != kaPrefix {
+			parts = append(parts, m.keys[a.id]+" "+lbl)
+		}
+	}
+	return strings.Join(parts, " · ")
 }
 
 // tabBar draws the tabs of the open boards + the "+" button (browser style) and,
