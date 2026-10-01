@@ -19,6 +19,9 @@ type Config struct {
 	Editor        string   `yaml:"editor"`         // "" = $EDITOR         (F3)
 	ConfirmDelete bool     `yaml:"confirm_delete"` //                      (F2)
 	Priorities    []string `yaml:"priorities"`     // levels               (F9)
+	// UpdateCheck: on open, look up the newest release on GitHub (cached 24h in
+	// update.json) and say so in the footer. false = the TUI never touches the network.
+	UpdateCheck bool `yaml:"update_check"`
 	// Keys are shortcut overrides (action→key). Only what differs from the default
 	// lives here — the TUI applies the defaults on top. Action and keys are a TUI
 	// concept (internal/tui); here it's just an opaque map, hand-editable.
@@ -45,6 +48,7 @@ func DefaultConfig() Config {
 		DateFormat:    "2006-01-02",
 		ConfirmDelete: true,
 		Priorities:    []string{"low", "normal", "high"},
+		UpdateCheck:   true,
 	}
 }
 

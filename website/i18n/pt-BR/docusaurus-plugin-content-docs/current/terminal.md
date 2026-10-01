@@ -133,6 +133,7 @@ preview_pane: true          # painel markdown no rodapé
 date_format: 2006-01-02     # um layout Go, aplicado ao `due`
 editor: ''                  # '' = $EDITOR
 confirm_delete: true        # pergunta antes de apagar
+update_check: true          # aviso no rodapé quando sai versão nova
 priorities: [low, normal, high]
 keys:                       # só os overrides
   add: n
@@ -150,6 +151,7 @@ tags:                       # o catálogo de tags
 | `date_format` | `2006-01-02` | layout Go, não `YYYY-MM-DD` |
 | `editor` | `''` | cai no `$EDITOR` |
 | `confirm_delete` | `true` | |
+| `update_check` | `true` | ao abrir, consulta no GitHub o release mais novo (cache de 24h em `update.json`) e avisa no rodapé; `false` = nunca acessa a rede. Build dev não consulta |
 | `priorities` | `[low, normal, high]` | os níveis que um card pode carregar |
 | `keys` | — | ação → tecla, só overrides |
 | `tags` | — | catálogo: `name`, `color`, `desc` |

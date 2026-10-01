@@ -171,7 +171,8 @@ type Model struct {
 
 	// configurable shortcuts (modeKeymap): action→key resolved (default + overrides)
 	keys            map[string]string
-	prefixArmed     bool // the prefix key (ctrl+t by default) armed the prefix → the next key fires a command
+	latest          string // newer release tag found by checkUpdateCmd ("" = none)
+	prefixArmed     bool   // the prefix key (ctrl+t by default) armed the prefix → the next key fires a command
 	keymapCursor    int
 	keymapCapturing bool          // waiting for the next key to rebind the action under the cursor
 	keymapConflict  string        // "" none · id of the conflicting action · "reserved" (esc/ctrl+c)
@@ -1038,7 +1039,7 @@ func tickCmd() tea.Cmd {
 	return tea.Tick(pollInterval, func(time.Time) tea.Msg { return reloadTickMsg{} })
 }
 
-func (m *Model) Init() tea.Cmd { return tea.Batch(tickCmd(), m.syncOnOpen()) }
+func (m *Model) Init() tea.Cmd { return tea.Batch(tickCmd(), m.syncOnOpen(), m.checkUpdateCmd()) }
 
 // dirSig is a cheap signature of the data dir (name+size+mtime of the files,
 // without parsing) — it changes when any .md is created/edited/removed externally.
@@ -1181,6 +1182,9 @@ func (m *Model) update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			}
 		}
 		return m, cmd
+	case updateMsg:
+		m.latest = string(msg)
+		return m, nil
 	case actionClearMsg:
 		m.action = nil // clears the ✓ of success
 		m.reload()
@@ -4033,7 +4037,14 @@ func (m *Model) boardView() string {
 // tmux-style bar — PREFIX badge + the list of available commands, cropped to the width.
 func (m *Model) bottomBar() string {
 	if !m.prefixArmed {
-		return helpStyle.Render(fmt.Sprintf(msg.hIdle, m.keys[kaPrefix]))
+		idle := helpStyle.Render(fmt.Sprintf(msg.hIdle, m.keys[kaPrefix]))
+		if m.latest != "" {
+			idle += helpStyle.Render(" · ") + okStyle.Render(fmt.Sprintf(msg.updateAvail, m.latest, releasesPage))
+			if w := m.viewW; w > 0 {
+				idle = ansi.Truncate(idle, w, "…")
+			}
+		}
+		return idle
 	}
 	badge := prefixBadge.Render(" PREFIX ")
 	hints := m.prefixHints()

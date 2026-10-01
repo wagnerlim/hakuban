@@ -52,6 +52,7 @@ func main() {
 		fmt.Fprintln(os.Stderr, "hakuban: erro abrindo store:", err)
 		os.Exit(1)
 	}
+	tui.Version = resolveVersion()
 	// v2: alt screen is a field of the View (tui.Model.View), no longer a program option.
 	if _, err := tea.NewProgram(tui.New(store)).Run(); err != nil {
 		fmt.Fprintln(os.Stderr, "hakuban:", err)
