@@ -4085,7 +4085,11 @@ func renderCard(t *task.Task, sel bool, contentW int, ann string, cat []task.Tag
 	// all lines fixed at contentW → the box (without .Width) has a uniform width and
 	// doesn't re-wrap (the re-wrap trimmed the pill's padding on the 2nd line).
 	b.WriteString(lipgloss.NewStyle().Width(contentW).Render(faint.Render(t.ID)+"  "+prioTag(t.Priority)) + "\n")
-	b.WriteString(lipgloss.NewStyle().Bold(true).Width(contentW).Render(t.Title))
+	// x/ansi's Wordwrap overflows after breaking at a hyphen ("Front-end -" at w=26 comes
+	// out 28 wide); an over-wide line makes the column's Width(cardsW) re-wrap every
+	// line of the card. Hardwrap caps whatever Wordwrap let through.
+	title := ansi.Hardwrap(ansi.Wordwrap(t.Title, contentW, ""), contentW, true)
+	b.WriteString(lipgloss.NewStyle().Bold(true).Width(contentW).Render(title))
 	if ann != "" {
 		b.WriteString("\n" + lipgloss.NewStyle().Width(contentW).Render(ann))
 	}
