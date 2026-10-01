@@ -115,6 +115,7 @@ preview_pane: true          # 底部的 markdown 面板
 date_format: 2006-01-02     # 一个 Go layout，作用于 `due`
 editor: ''                  # '' = $EDITOR
 confirm_delete: true        # 删除前询问
+update_check: true          # 有新版本时在底部提示
 priorities: [low, normal, high]
 keys:                       # 只放覆盖项
   add: n
@@ -132,6 +133,7 @@ tags:                       # 标签目录
 | `date_format` | `2006-01-02` | Go layout，不是 `YYYY-MM-DD` |
 | `editor` | `''` | 退回 `$EDITOR` |
 | `confirm_delete` | `true` | |
+| `update_check` | `true` | 打开时向 GitHub 查询最新版本（在 `update.json` 中缓存 24 小时）并在底部提示；`false` = 从不访问网络。dev 构建不检查 |
 | `priorities` | `[low, normal, high]` | 卡片可用的优先级 |
 | `keys` | — | action → 键，只放覆盖项 |
 | `tags` | — | 目录：`name`、`color`、`desc` |

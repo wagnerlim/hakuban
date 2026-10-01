@@ -23,7 +23,7 @@ type messages struct {
 	tKeymap, hKeymap, hKeymapCapturing, keymapPress, keymapReserved string
 	keymapConflict, sKeys, dKeys                                    string
 	// keybind/prefix modal: modal subtitle, sections and footer
-	kmSubtitle, grpNavLabel, grpCmdLabel, hIdle string
+	kmSubtitle, grpNavLabel, grpCmdLabel, hIdle, updateAvail string
 	// hPrefix: short label per command action id for the armed PREFIX bar, which shows
 	// each one next to its *bound* key ("esc" = the cancel hint). An action missing here
 	// stays off the bar (close_board: ctrl+w is too rare to spend the width on).
@@ -81,7 +81,7 @@ var langs = map[string]messages{
 		keymapPress: "aperte a tecla…", keymapReserved: "tecla reservada (esc/ctrl+c)", keymapConflict: "já usada por: %s",
 		sKeys: "Atalhos", dKeys: "Remapeie as teclas do board",
 		kmSubtitle: "comandos disponíveis e atalhos configurados", grpNavLabel: "navegação", grpCmdLabel: "comandos",
-		hIdle:        "%s comandos · hjkl navega · enter abre",
+		hIdle: "%s comandos · hjkl navega · enter abre", updateAvail: "%s disponível — %s",
 		hPrefix:      map[string]string{"esc": "cancela", "add": "nova", "find": "busca", "subtask": "sub", "board_list": "boards", "board_cfg": "board", "lane_cfg": "lane", "tags": "tags", "card_tags": "card", "settings": "config", "new_board": "novo", "sync": "sync", "keymap": "atalhos", "quit": "sair"},
 		syncLabel:    "Sincronizar",
 		syncAllLabel: "Sincronizar tudo",
@@ -134,7 +134,7 @@ var langs = map[string]messages{
 		keymapPress: "press a key…", keymapReserved: "reserved key (esc/ctrl+c)", keymapConflict: "already used by: %s",
 		sKeys: "Shortcuts", dKeys: "Remap the board keys",
 		kmSubtitle: "available commands and configured shortcuts", grpNavLabel: "navigation", grpCmdLabel: "commands",
-		hIdle:        "%s commands · hjkl navigate · enter open",
+		hIdle: "%s commands · hjkl navigate · enter open", updateAvail: "%s available — %s",
 		hPrefix:      map[string]string{"esc": "cancel", "add": "add", "find": "find", "subtask": "sub", "board_list": "boards", "board_cfg": "board", "lane_cfg": "lane", "tags": "tags", "card_tags": "card", "settings": "config", "new_board": "new", "sync": "sync", "keymap": "keybinds", "quit": "quit"},
 		syncLabel:    "Sync",
 		syncAllLabel: "Sync all",
@@ -187,7 +187,7 @@ var langs = map[string]messages{
 		keymapPress: "按下按键…", keymapReserved: "保留键 (esc/ctrl+c)", keymapConflict: "已被占用：%s",
 		sKeys: "快捷键", dKeys: "重新映射看板按键",
 		kmSubtitle: "可用命令与已配置快捷键", grpNavLabel: "导航", grpCmdLabel: "命令",
-		hIdle:        "%s 命令 · hjkl 导航 · enter 打开",
+		hIdle: "%s 命令 · hjkl 导航 · enter 打开", updateAvail: "%s 可用 — %s",
 		hPrefix:      map[string]string{"esc": "取消", "add": "新增", "find": "搜索", "subtask": "子", "board_list": "看板", "board_cfg": "看板设置", "lane_cfg": "列", "tags": "标签", "card_tags": "卡片标签", "settings": "设置", "new_board": "新建", "sync": "同步", "keymap": "快捷键", "quit": "退出"},
 		syncLabel:    "同步",
 		syncAllLabel: "全部同步",

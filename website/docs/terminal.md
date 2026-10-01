@@ -133,6 +133,7 @@ preview_pane: true          # markdown pane in the footer
 date_format: 2006-01-02     # a Go layout, applied to `due`
 editor: ''                  # '' = $EDITOR
 confirm_delete: true        # ask before deleting
+update_check: true          # footer notice when a newer release is out
 priorities: [low, normal, high]
 keys:                       # only the overrides
   add: n
@@ -150,6 +151,7 @@ tags:                       # the tag catalog
 | `date_format` | `2006-01-02` | Go layout, not `YYYY-MM-DD` |
 | `editor` | `''` | falls back to `$EDITOR` |
 | `confirm_delete` | `true` | |
+| `update_check` | `true` | on open, asks GitHub for the newest release (cached 24h in `update.json`) and says so in the footer; `false` = never touches the network. Dev builds don't check |
 | `priorities` | `[low, normal, high]` | the levels a card can carry |
 | `keys` | — | action → key, overrides only |
 | `tags` | — | catalog: `name`, `color`, `desc` |
