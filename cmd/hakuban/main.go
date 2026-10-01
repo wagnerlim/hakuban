@@ -5,6 +5,7 @@
 //
 //	hakuban move <id> <coluna>     move a card firing the column hooks (on_exit→on_enter)
 //	hakuban progress <id> <pct>    set the card's displayed % (0..100)
+//	hakuban version                print the version and exit
 //
 // With no subcommand it opens the TUI.
 package main
@@ -12,6 +13,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"runtime/debug"
 	"strconv"
 
 	tea "charm.land/bubbletea/v2"
@@ -19,7 +21,26 @@ import (
 	"github.com/wagnerlim/hakuban/internal/tui"
 )
 
+// version is stamped by GoReleaser (-X main.version=...). Empty means the binary did not
+// come from a release: `go install ...@vX` still knows its module version, a local build
+// says "dev".
+var version string
+
+func resolveVersion() string {
+	if version != "" {
+		return version
+	}
+	if bi, ok := debug.ReadBuildInfo(); ok && bi.Main.Version != "" && bi.Main.Version != "(devel)" {
+		return bi.Main.Version
+	}
+	return "dev"
+}
+
 func main() {
+	if len(os.Args) > 1 && (os.Args[1] == "version" || os.Args[1] == "--version") {
+		fmt.Println("hakuban", resolveVersion())
+		return
+	}
 	if len(os.Args) > 1 && os.Args[1] == "move" {
 		os.Exit(runMove(os.Args[2:]))
 	}

@@ -26,8 +26,19 @@ title: Hakuban 是什么
 ## 安装
 
 ```bash
-go install github.com/wagnerlim/hakuban/cmd/hakuban@latest
+brew install wagnerlim/tap/hakuban          # macOS 和 Linux
+
+scoop bucket add wagnerlim https://github.com/wagnerlim/scoop-bucket
+scoop install hakuban                       # Windows
+
+go install github.com/wagnerlim/hakuban/cmd/hakuban@latest   # 任何装有 Go 的环境
 ```
+
+`hakuban version` 显示当前版本。brew 和 scoop 都不会提示新版本发布：需要时运行
+`brew upgrade hakuban` / `scoop update hakuban`。
+
+在 Windows 上，脚本钩子（`on_enter_cmd`、`on_exit_cmd`、同步的 `cmd`）通过 `sh -c` 运行，
+因此 `PATH` 中需要有 `sh`——Git Bash 或 WSL。TUI 和指令钩子无需它即可工作。
 
 不带子命令运行 `hakuban` 会打开 TUI，需要 TTY。另有两个无界面子命令，让智能体在没有终端的情况下推动流水线：
 
@@ -40,7 +51,7 @@ hakuban progress <id> <0..100>   # 卡片上显示的百分比
 
 ## 老实说的前置条件
 
-二进制本身只需要 Go。**但智能体演示在一台干净的机器上跑不起来**，它需要：
+二进制本身无需其他依赖。**但智能体演示在一台干净的机器上跑不起来**，它需要：
 
 - `jq`
 - 已登录的 `gh`

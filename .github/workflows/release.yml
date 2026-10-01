@@ -1,0 +1,30 @@
+# Publishes a release on every semver tag: binaries, checksums, the Homebrew formula and
+# the Scoop manifest (.goreleaser.yaml). TAP_GITHUB_TOKEN = a PAT with contents:write on
+# wagnerlim/homebrew-tap and wagnerlim/scoop-bucket — GITHUB_TOKEN cannot push to other repos.
+name: release
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+jobs:
+  goreleaser:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # the changelog needs the previous tag
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+      - run: go test ./...
+      - uses: goreleaser/goreleaser-action@v6
+        with:
+          version: '~> v2'
+          args: release --clean
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAP_GITHUB_TOKEN: ${{ secrets.TAP_GITHUB_TOKEN }}

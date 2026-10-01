@@ -1,0 +1,58 @@
+# One `git tag vX.Y.Z && git push --tags` publishes everywhere: GitHub Release (archives +
+# checksums), the Homebrew tap and the Scoop bucket. Run by .github/workflows/release.yml.
+# Local dry run, publishes nothing: goreleaser release --snapshot --clean
+version: 2
+
+project_name: hakuban
+
+builds:
+  - main: ./cmd/hakuban
+    env: [CGO_ENABLED=0]
+    goos: [darwin, linux, windows]
+    goarch: [amd64, arm64]
+    ignore:
+      - {goos: windows, goarch: arm64}
+    ldflags: ["-s -w -X main.version={{.Version}}"]
+
+archives:
+  - formats: [tar.gz]
+    format_overrides:
+      - {goos: windows, formats: [zip]}
+    files: [LICENSE, README.md, CREDITS.md]
+
+checksum:
+  name_template: checksums.txt
+
+changelog:
+  sort: asc
+  filters:
+    exclude: ["^docs", "^test", "^chore\\(website\\)"]
+
+release:
+  # The `assets` release only hosts the doc video (website/fetch-assets.sh); it must never
+  # be "latest", or releases/latest stops pointing at a version.
+  make_latest: true
+
+# ponytail: `brews` (Formula) is deprecated in GoReleaser v2 in favour of homebrew_casks, but a
+# Formula is what installs without the macOS quarantine flag on an unsigned binary and also
+# works on Linux. Move to homebrew_casks when brews is removed.
+brews:
+  - repository:
+      owner: wagnerlim
+      name: homebrew-tap
+      token: "{{ .Env.TAP_GITHUB_TOKEN }}"
+    directory: Formula
+    homepage: https://wagnerlim.github.io/hakuban/
+    description: A terminal whiteboard where moving a card runs the automation you declared.
+    license: MIT
+    test: |
+      system "#{bin}/hakuban", "version"
+
+scoops:
+  - repository:
+      owner: wagnerlim
+      name: scoop-bucket
+      token: "{{ .Env.TAP_GITHUB_TOKEN }}"
+    homepage: https://wagnerlim.github.io/hakuban/
+    description: A terminal whiteboard where moving a card runs the automation you declared.
+    license: MIT
