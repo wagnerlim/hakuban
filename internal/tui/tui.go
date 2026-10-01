@@ -4036,11 +4036,23 @@ func (m *Model) bottomBar() string {
 		return helpStyle.Render(fmt.Sprintf(msg.hIdle, m.keys[kaPrefix]))
 	}
 	badge := prefixBadge.Render(" PREFIX ")
-	hints := msg.hPrefix
+	hints := m.prefixHints()
 	if w := m.viewW; w > 0 { // doesn't overflow the window: truncates the commands, keeps the badge
 		hints = ansi.Truncate(hints, max(0, w-lipgloss.Width(badge)-1), "…")
 	}
 	return badge + " " + helpStyle.Render(hints)
+}
+
+// prefixHints lists the commands the armed prefix accepts, each with the key it is bound
+// to right now — read from the keymap, so a rebind shows up here too.
+func (m *Model) prefixHints() string {
+	parts := []string{"esc " + msg.hPrefix["esc"]}
+	for _, a := range keyActions {
+		if lbl, ok := msg.hPrefix[a.id]; ok && a.grp == grpCmd && a.id != kaPrefix {
+			parts = append(parts, m.keys[a.id]+" "+lbl)
+		}
+	}
+	return strings.Join(parts, " · ")
 }
 
 // tabBar draws the tabs of the open boards + the "+" button (browser style) and,

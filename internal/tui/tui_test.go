@@ -978,3 +978,21 @@ func TestPrefixKeyConfigurable(t *testing.T) {
 		t.Fatalf("idle hint should show the configured prefix, got %q", got)
 	}
 }
+
+// The armed PREFIX bar reads the live keymap: defaults render the same line as before,
+// and a rebound command shows its new key instead of the default.
+func TestPrefixHintsFollowKeymap(t *testing.T) {
+	s, err := task.Open(t.TempDir())
+	if err != nil {
+		t.Fatal(err)
+	}
+	m := New(s)
+	want := "esc cancela · a nova · / busca · S sub · b boards · c board · g lane · t tags · T card · s config · + novo · y sync · ? atalhos · q sair"
+	if got := m.prefixHints(); got != want {
+		t.Fatalf("default hints:\n got %q\nwant %q", got, want)
+	}
+	m.rebind(kaAdd, "n")
+	if got := m.prefixHints(); !strings.Contains(got, "n nova") || strings.Contains(got, "a nova") {
+		t.Fatalf("rebound add should show as n, got %q", got)
+	}
+}
